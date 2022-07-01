@@ -11,7 +11,7 @@ from linebot.models import ConfirmTemplate, URITemplateAction, URIAction, Button
 
 # My module
 from sql import AddUserInfo, CheckUserExistance, GetUserInfo
-from config import LINE_API_KEY, WEBHOOK_HANDLER
+from config import LINE_API_KEY, WEBHOOK_HANDLER, RULES
 from find_places import find_restaurant
 
 line_bot_api = LineBotApi(LINE_API_KEY)
@@ -33,6 +33,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     etext = event.message.text
+    
 
         
 @handler.add(MessageEvent, message=LocationMessage)
@@ -57,7 +58,7 @@ def handle_message(event):
     if is_agree == 0:
         multimessage.append(TextSendMessage(text="你尚未同意我們的使用條款，請先同意我們的條款\n"\
         "條款網址如下"))
-        multimessage.append(TextSendMessage(text='shorturl.at/fotLM'))
+        multimessage.append(TextSendMessage(text=RULES))
         multimessage.append(TemplateSendMessage(
             alt_text = '同意使用條款?',
             template = ConfirmTemplate(
