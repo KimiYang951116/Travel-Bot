@@ -53,7 +53,7 @@ def handle_message(event):
         multimessage.append(TextSendMessage(text=f'你目前不再資料庫中，現在將立即為你新增'))
         AddUserInfo(connection, user_id)
         multimessage.append(TextSendMessage(text=f'已經成功將你加入資料庫'))
-        multimessage.append(TextSendMessage(text=f'歡迎你{user_name}，接著請同意我們的使用條款'))
+        multimessage.append(TextSendMessage(text=f'歡迎你{user_name.display_name}，接著請同意我們的使用條款'))
         line_bot_api.reply_message(event.reply_token, multimessage)
     else:
         is_agree = GetUserInfo(connection, user_id, 'service')
@@ -74,10 +74,6 @@ def handle_message(event):
                         MessageTemplateAction(
                             label = '我不同意',
                             text = '/service/no'
-                        ),
-                        URITemplateAction(
-                            label = '查看條款',
-                            uri = 'shorturl.at/fotLM'
                         )
                     ]
                 )
