@@ -54,31 +54,29 @@ def handle_message(event):
         AddUserInfo(connection, user_id)
         multimessage.append(TextSendMessage(text=f'已經成功將你加入資料庫'))
         multimessage.append(TextSendMessage(text=f'歡迎你{user_name.display_name}，接著請同意我們的使用條款'))
-        line_bot_api.reply_message(event.reply_token, multimessage)
+    is_agree = GetUserInfo(connection, user_id, 'service')
+    if is_agree == 0:
+        multimessage.append(TextSendMessage(text="你尚未同意我們的使用條款，請先同意我們的條款\n"\
+        "條款網址如下"))
+        multimessage.append(TextSendMessage(text='shorturl.at/fotLM'))
+        multimessage.append(TemplateSendMessage(
+            alt_text = '同意使用條款?',
+            template = ConfirmTemplate(
+                text = '你是否同意我們的使用條款?',
+                actions = [
+                    MessageTemplateAction(
+                        label = '我同意',
+                        text = '/service/yes'
+                    ),
+                    MessageTemplateAction(
+                        label = '我不同意',
+                        text = '/service/no'
+                    )
+                ]
+            )
+        ))
     else:
-        is_agree = GetUserInfo(connection, user_id, 'service')
-        if is_agree == 0:
-            mutimessage = []
-            mutimessage.append(TextSendMessage(text="你尚未同意我們的使用條款，請先同意我們的條款\n\
-            條款網址如下"))
-            mutimessage.append(TextSendMessage(text='shorturl.at/fotLM'))
-            mutimessage.append(TemplateSendMessage(
-                alt_text = '同意使用條款?',
-                template = ConfirmTemplate(
-                    text = '你是否同意我們的使用條款?',
-                    actions = [
-                        MessageTemplateAction(
-                            label = '我同意',
-                            text = '/service/yes'
-                        ),
-                        MessageTemplateAction(
-                            label = '我不同意',
-                            text = '/service/no'
-                        )
-                    ]
-                )
-            ))
-            line_bot_api.reply_message(event.reply_token, mutimessage)
-        else:
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text = 'hi'))
+        multimessage.append(TextSendMessage(text = 'hi'))
+    line_bot_api.reply_message(event.reply_token, multimessage)
+
         
