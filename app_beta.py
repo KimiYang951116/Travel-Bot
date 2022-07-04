@@ -51,34 +51,36 @@ def handle_message(event):
         multimessage.append(TextSendMessage(text=f'已經成功將你加入資料庫\n歡迎你{user_name.display_name}，接著請同意我們的使用條款'))
     is_agree = GetUserInfo(connection, user_id, 'service')
     if is_agree == 0:
-        multimessage.append(TextSendMessage(text="你尚未同意我們的使用條款，請先同意我們的條款\n"\
-        "條款網址如下"))
-        multimessage.append(TextSendMessage(text=RULES))
-        multimessage.append(TemplateSendMessage(
-            alt_text = '同意使用條款?',
-            template = ConfirmTemplate(
-                text = '你是否同意我們的使用條款?',
-                actions = [
-                    MessageTemplateAction(
-                        label = '我同意',
-                        text = '/service/1'
-                    ),
-                    MessageTemplateAction(
-                        label = '我不同意',
-                        text = '/service/0'
-                    )
-                ]
-            )
-        ))
-        line_bot_api.reply_message(event.reply_token, multimessage)
-    elif etext.startswith('/service'):
-        proetext = etext.split('/')
-        proetext = proetext[2]
-        if proetext == 1:
-            UpdateUserInfo(connection, user_id, 'service', 1)
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text = 'OK，你現在可以開始使用Travel Bot 的所有功能'))
+        if etext.startswith('/service'):
+            proetext = etext.split('/')
+            proetext = proetext[2]
+            if proetext == 1:
+                UpdateUserInfo(connection, user_id, 'service', 1)
+                multimessage.append(TextSendMessage(text = 'OK，你現在可以開始使用Travel Bot 的所有功能'))
+            else:
+                multimessage.append(TextSendMessage(text = '很抱歉，由於你不同意我們的條款，我們無法為你提供服務，同意條款以獲得服務'))
         else:
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text = '很抱歉，由於你不同意我們的條款，我們無法為你提供服務，同意條款以獲得服務'))
+            multimessage.append(TextSendMessage(text="你尚未同意我們的使用條款，請先同意我們的條款\n"\
+            "條款如下"))
+            multimessage.append(TextSendMessage(text=RULES))
+            multimessage.append(TemplateSendMessage(
+                alt_text = '同意使用條款?',
+                template = ConfirmTemplate(
+                    text = '你是否同意我們的使用條款?',
+                    actions = [
+                        MessageTemplateAction(
+                            label = '我同意',
+                            text = '/service/1'
+                        ),
+                        MessageTemplateAction(
+                            label = '我不同意',
+                            text = '/service/0'
+                        )
+                    ]
+                )
+            ))
+
+    line_bot_api.reply_message(event.reply_token, multimessage)
 
     
 
