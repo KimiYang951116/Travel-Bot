@@ -89,7 +89,8 @@ def handle_message(event):
         if type(nearby_places) == pd.core.frame.DataFrame:
             columns = make_nearby_carousel_template_column(nearby_places)
             multimessage.append = make_nearby_carousel_template(proetext[2], columns)
-    line_bot_api.reply_message(event.reply_token, multimessage)
+    if len(multimessage) > 0 and len(multimessage) < 6:
+        line_bot_api.reply_message(event.reply_token, multimessage)
 
     
 
