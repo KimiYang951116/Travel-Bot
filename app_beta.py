@@ -3,6 +3,7 @@ from flask import Flask, request, abort
 import requests
 import time
 import pymysql
+import pandas as pd
 
 # Line bot module
 from linebot import LineBotApi, WebhookHandler
@@ -10,9 +11,10 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import ConfirmTemplate, URITemplateAction, URIAction, ButtonComponent, FlexSendMessage, IconComponent, ImageComponent, TextComponent, BoxComponent, BubbleContainer, MessageTemplateAction, CarouselTemplate, CarouselColumn, MessageEvent, TextMessage, LocationMessage, TextSendMessage, QuickReply, QuickReplyButton, MessageAction, ImageSendMessage, StickerSendMessage, LocationSendMessage, TemplateSendMessage
 
 # My module
-from sql import AddUserInfo, CheckUserExistance, GetUserInfo, UpdateUserInfo
-from config import LINE_API_KEY, WEBHOOK_HANDLER, RULES
-from find_places import find_restaurant
+from functions.sql import AddUserInfo, CheckUserExistance, GetUserInfo, UpdateUserInfo
+from functions.find_places import find_nearby_places
+from functions.line_sdk import make_nearby_carousel_template, make_nearby_carousel_template_column
+from config import LINE_API_KEY, RANKBY_DICT, WEBHOOK_HANDLER, RULES
 
 line_bot_api = LineBotApi(LINE_API_KEY)
 handler = WebhookHandler(WEBHOOK_HANDLER)
@@ -58,15 +60,15 @@ def handle_message(event):
                 UpdateUserInfo(connection, user_id, 'service', 1)
                 multimessage.append(TextSendMessage(text = 'OK，你現在可以開始使用Travel Bot 的所有功能'))
             else:
-                multimessage.append(TextSendMessage(text = '很抱歉，由於你不同意我們的條款，我們無法為你提供服務，同意條款以獲得服務'))
+                multimessage.append(TextSendMessage(text = '很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))
         else:
-            multimessage.append(TextSendMessage(text="你尚未同意我們的使用條款，請先同意我們的條款\n"\
+            multimessage.append(TextSendMessage(text="你尚未同意我們的個人資料告知事項及同意事項(以下簡稱同意事項)，請先同意我們的同意事項\n"\
             "條款如下"))
             multimessage.append(TextSendMessage(text=RULES))
             multimessage.append(TemplateSendMessage(
-                alt_text = '同意使用條款?',
+                alt_text = '同意我們的同意事項?',
                 template = ConfirmTemplate(
-                    text = '你是否同意我們的使用條款?',
+                    text = '你是否同意我們的同意事項?',
                     actions = [
                         MessageTemplateAction(
                             label = '我同意',
@@ -79,6 +81,14 @@ def handle_message(event):
                     ]
                 )
             ))
+    if etext.startswith('/find'):
+        proetext = etext.split('/')
+        proetext = proetext[2]
+        latlong = GetUserInfo(connection, user_id, 'latlong')
+        nearby_places = find_nearby_places(catagory=proetext[2], rankby = RANKBY_DICT[proetext[2]], latlong = latlong)
+        if type(nearby_places) == pd.core.frame.DataFrame:
+            columns = make_nearby_carousel_template_column(nearby_places)
+            multimessage.append = make_nearby_carousel_template(proetext[2], columns)
     line_bot_api.reply_message(event.reply_token, multimessage)
 
     
@@ -124,24 +134,31 @@ def handle_message(event):
             )
         ))
     else:
+        latitude = event.message.latitude
+        longitude = event.message.longitude
+        latlong = f'{latitude},{longitude}'
+        UpdateUserInfo(connection, user_id, 'latlong', latlong)
         multimessage.append(TextSendMessage(
             text = '請問你要搜尋附近的甚麼項目?',
             quick_reply = QuickReply(
                 items=[
                     QuickReplyButton(
-                        action=MessageAction(label='全部', text='/find/all')
+                        action=MessageAction(label='全部', text='/find')
                     ),
                     QuickReplyButton(
                         action=MessageAction(label='餐廳', text='/find/restaurant')
                     ),
                     QuickReplyButton(
-                        action=MessageAction(label='加油站', text='/find/gas')
+                        action=MessageAction(label='加油站', text='/find/gas_station')
                     ),
                     QuickReplyButton(
-                        action=MessageAction(label='旅館', text='/find/hotel')
+                        action=MessageAction(label='旅館', text='/find/lodging')
                     ),
                     QuickReplyButton(
-                        action=MessageAction(label='景點', text='/find/sight')
+                        action=MessageAction(label='景點', text='/find/tourist_attraction')
+                    ),
+                    QuickReplyButton(
+                        action=MessageAction(label='便利商店', text='/find/convenience_store')
                     ),
                 ]
             )

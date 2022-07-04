@@ -233,23 +233,23 @@
 #     #     else:
 #     #         times = len(placelst)
 #     #     for i in range(times):
-#     #         column.append(CarouselColumn(
-#     #             thumbnail_image_url = 'https://thumbs.dreamstime.com/z/under-development-concept-illustration-large-billboard-construction-cranes-isolated-white-d-render-graphic-36929326.jpg',
-#     #             title=placelst[i],
-#     #             text = response['results'][i]['vicinity'],
-#     #             actions = [
-#     #                 MessageTemplateAction(
-#     #                     label = '查看詳細資料',
-#     #                     text = f'/detail/{placeIDlst[i]}({placelst[i]})'
-#     #                 )
-#     #             ]
-#     #         ))
+column.append(CarouselColumn(
+    thumbnail_image_url = 'https://thumbs.dreamstime.com/z/under-development-concept-illustration-large-billboard-construction-cranes-isolated-white-d-render-graphic-36929326.jpg',
+    title=placelst[i],
+    text = response['results'][i]['vicinity'],
+    actions = [
+        MessageTemplateAction(
+            label = '查看詳細資料',
+            text = f'/detail/{placeIDlst[i]}({placelst[i]})'
+        )
+    ]
+))
 #     #     print(column)
-#     #     message = TemplateSendMessage(
-#     #         alt_text = '轉盤樣板',
-#     #         template=CarouselTemplate(
-#     #             columns=column
-#     #         ))
+message = TemplateSendMessage(
+    alt_text = '轉盤樣板',
+    template=CarouselTemplate(
+        columns=column
+    ))
 #     #     line_bot_api.reply_message(event.reply_token, message)
 #     # elif response['status'] == 'ZERO_RESULTS':
 #     #     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='附近無餐廳'))
