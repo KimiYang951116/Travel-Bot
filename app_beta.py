@@ -79,7 +79,6 @@ def handle_message(event):
                     ]
                 )
             ))
-
     line_bot_api.reply_message(event.reply_token, multimessage)
 
     
@@ -125,7 +124,28 @@ def handle_message(event):
             )
         ))
     else:
-        multimessage.append(TextSendMessage(text = 'hi'))
+        multimessage.append(TextSendMessage(
+            text = '請問你要搜尋附近的甚麼項目?',
+            quick_reply = QuickReply(
+                items=[
+                    QuickReplyButton(
+                        action=MessageAction(label='全部', text='/find/all')
+                    ),
+                    QuickReplyButton(
+                        action=MessageAction(label='餐廳', text='/find/restaurant')
+                    ),
+                    QuickReplyButton(
+                        action=MessageAction(label='加油站', text='/find/gas')
+                    ),
+                    QuickReplyButton(
+                        action=MessageAction(label='旅館', text='/find/hotel')
+                    ),
+                    QuickReplyButton(
+                        action=MessageAction(label='景點', text='/find/sight')
+                    ),
+                ]
+            )
+        ))
     line_bot_api.reply_message(event.reply_token, multimessage)
 
         
