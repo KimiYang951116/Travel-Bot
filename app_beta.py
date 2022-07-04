@@ -54,7 +54,7 @@ def handle_message(event):
         if etext.startswith('/service'):
             proetext = etext.split('/')
             proetext = proetext[2]
-            if proetext == 1:
+            if proetext == '1':
                 UpdateUserInfo(connection, user_id, 'service', 1)
                 multimessage.append(TextSendMessage(text = 'OK，你現在可以開始使用Travel Bot 的所有功能'))
             else:
