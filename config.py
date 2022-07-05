@@ -19,4 +19,4 @@ RULES = '''個人資料告知事項及同意事項
 依據個資法第三條規定您就提供予travel bot之個人資料得以電子郵件或Line訊息請求查詢、請求閱覽、製給複製本、補充、更正、請求travel bot請求停止蒐集、處理或利用及請求刪除。惟因執行業務所必須之個人資料，依個資法第11條規定，得拒絕您的請求。
  
 您如果未能提供個人資料，將可能無法使用travel bot所提供之服務及資訊。'''
-RANKBY_DICT = {'restaurant':'distance', 'gas_station':'distance', 'lodging':'prominence', 'tourist_attraction':'prominence', 'convenience_store':'distance'}
+RANKBY_DICT = {'restaurant':'prominence', 'gas_station':'distance', 'lodging':'prominence', 'tourist_attraction':'prominence', 'convenience_store':'distance'}
