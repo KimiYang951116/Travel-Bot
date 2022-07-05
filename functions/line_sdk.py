@@ -7,6 +7,7 @@ def make_nearby_carousel_template(catagory, column):
         template=CarouselTemplate(
         columns=column
     ))
+    return message
 
 def make_nearby_carousel_template_column(nearby_place_df):
     column = []
@@ -27,3 +28,4 @@ def make_nearby_carousel_template_column(nearby_place_df):
                 )
             ]
         ))
+    return column
