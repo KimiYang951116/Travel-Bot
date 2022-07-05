@@ -85,10 +85,10 @@ def handle_message(event):
         proetext = etext.split('/')
         proetext = proetext[2]
         latlong = GetUserInfo(connection, user_id, 'latlong')
-        nearby_places = find_nearby_places(catagory=proetext[2], rankby = RANKBY_DICT[proetext], latlong = latlong)
+        nearby_places = find_nearby_places(catagory=proetext, rankby = RANKBY_DICT[proetext], latlong = latlong)
         if type(nearby_places) == pd.core.frame.DataFrame:
             columns = make_nearby_carousel_template_column(nearby_places)
-            multimessage.append(make_nearby_carousel_template(proetext[2], columns))
+            multimessage.append(make_nearby_carousel_template(proetext, columns))
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 
