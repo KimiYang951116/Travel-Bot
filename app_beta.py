@@ -85,7 +85,7 @@ def handle_message(event):
         proetext = etext.split('/')
         proetext = proetext[2]
         latlong = GetUserInfo(connection, user_id, 'latlong')
-        nearby_places = find_nearby_places(catagory=proetext[2], rankby = RANKBY_DICT[proetext[2]], latlong = latlong)
+        nearby_places = find_nearby_places(catagory=proetext[2], rankby = RANKBY_DICT[proetext], latlong = latlong)
         if type(nearby_places) == pd.core.frame.DataFrame:
             columns = make_nearby_carousel_template_column(nearby_places)
             multimessage.append = make_nearby_carousel_template(proetext[2], columns)
