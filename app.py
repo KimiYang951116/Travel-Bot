@@ -257,5 +257,5 @@ message = TemplateSendMessage(
 #     #     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='發生錯誤'))
     
 
-# if __name__ == '__main__':
-#     app.run()
+if __name__ == '__main__':
+    app.run()
