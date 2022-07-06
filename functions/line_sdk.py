@@ -48,7 +48,7 @@ def make_nearby_carousel_template_column(nearby_place_df):
             df_len = 9
         column.append(CarouselColumn(
             title='搜尋其他項目',
-            text = text,
+            text = '回到前頁',
             actions = [
                 MessageTemplateAction(
                     label = '返回',
