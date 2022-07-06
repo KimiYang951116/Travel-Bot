@@ -1,7 +1,5 @@
 # 3rd party module
 from flask import Flask, request, abort
-import requests
-import time
 import pymysql
 import pandas as pd
 
@@ -13,7 +11,7 @@ from linebot.models import ConfirmTemplate, URITemplateAction, URIAction, Button
 # My module
 from functions.sql import AddUserInfo, CheckUserExistance, GetUserInfo, UpdateUserInfo
 from functions.find_places import find_nearby_places
-from functions.line_sdk import make_nearby_carousel_template, make_nearby_carousel_template_column
+from functions.line_sdk import make_nearby_carousel_template, make_nearby_carousel_template_column, make_quick_reply_item_lst
 from config import LINE_API_KEY, RANKBY_DICT, WEBHOOK_HANDLER, RULES
 
 line_bot_api = LineBotApi(LINE_API_KEY)
@@ -88,7 +86,10 @@ def handle_message(event):
         nearby_places = find_nearby_places(catagory=proetext, rankby = RANKBY_DICT[proetext], latlong = latlong)
         if type(nearby_places) == pd.core.frame.DataFrame:
             columns = make_nearby_carousel_template_column(nearby_places)
-            multimessage.append(make_nearby_carousel_template(proetext, columns))
+            if columns != 'ERROR_OCCURED':
+                multimessage.append(make_nearby_carousel_template(proetext, columns))
+            else:
+                multimessage.append(TextSendMessage(text = '發生錯誤'))
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 
@@ -139,33 +140,14 @@ def handle_message(event):
         longitude = event.message.longitude
         latlong = f'{latitude},{longitude}'
         UpdateUserInfo(connection, user_id, 'latlong', latlong)
+        label_lst = ['全部', '餐廳', '加油站', '旅館', '景點', '便利商店']
+        text_lst = ['/find', '/find/restaurant', '/find/gas_station', '/find/lodging', '/find/tourist_attraction', '/find/convenience_store'] 
+        items = make_quick_reply_item_lst(label_lst, text_lst)
         multimessage.append(TextSendMessage(
             text = '請問你要搜尋附近的甚麼項目?',
             quick_reply = QuickReply(
-                items=[
-                    QuickReplyButton(
-                        action=MessageAction(label='全部', text='/find')
-                    ),
-                    QuickReplyButton(
-                        action=MessageAction(label='餐廳', text='/find/restaurant')
-                    ),
-                    QuickReplyButton(
-                        action=MessageAction(label='加油站', text='/find/gas_station')
-                    ),
-                    QuickReplyButton(
-                        action=MessageAction(label='旅館', text='/find/lodging')
-                    ),
-                    QuickReplyButton(
-                        action=MessageAction(label='景點', text='/find/tourist_attraction')
-                    ),
-                    QuickReplyButton(
-                        action=MessageAction(label='便利商店', text='/find/convenience_store')
-                    ),
-                ]
-            )
-        ))
+                items=items)))
     line_bot_api.reply_message(event.reply_token, multimessage)
 
-        
 if __name__ == '__main__':
     app.run()

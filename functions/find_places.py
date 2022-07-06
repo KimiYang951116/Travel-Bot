@@ -1,5 +1,4 @@
 # 3rd party module
-from selectors import EpollSelector
 import requests
 import pandas as pd
 
@@ -12,6 +11,7 @@ def  find_nearby_places(catagory, latlong, rankby = 'distance', api_key=GOOGLE_M
     The function takes a set of latitude and longitude as a input and outputs the places nearby
     it uses google maps api nearby search, for more details, see 
     https://developers.google.com/maps/documentation/places/web-service/search-nearby
+    
     parameters:
     1.catagory : the catagory of places you want to find nearby, 
     valid catagories see https://developers.google.com/maps/documentation/places/web-service/supported_types
