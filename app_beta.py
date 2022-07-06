@@ -81,15 +81,18 @@ def handle_message(event):
             ))
     if etext.startswith('/find'):
         proetext = etext.split('/')
-        proetext = proetext[2]
         latlong = GetUserInfo(connection, user_id, 'latlong')
-        nearby_places = find_nearby_places(catagory=proetext, rankby = RANKBY_DICT[proetext], latlong = latlong)
-        if type(nearby_places) == pd.core.frame.DataFrame:
-            columns = make_nearby_carousel_template_column(nearby_places)
-            if columns != 'ERROR_OCCURED':
-                multimessage.append(make_nearby_carousel_template(proetext, columns))
-            else:
-                multimessage.append(TextSendMessage(text = '發生錯誤'))
+        try:
+            proetext = proetext[2]
+        except:
+            proetext = ''
+            nearby_places = find_nearby_places(catagory=proetext, rankby = RANKBY_DICT[proetext], latlong = latlong)
+            if type(nearby_places) == pd.core.frame.DataFrame:
+                columns = make_nearby_carousel_template_column(nearby_places)
+                if columns != 'ERROR_OCCURED':
+                    multimessage.append(make_nearby_carousel_template(proetext, columns))
+                else:
+                    multimessage.append(TextSendMessage(text = '發生錯誤'))
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 
