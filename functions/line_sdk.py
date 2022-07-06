@@ -46,6 +46,16 @@ def make_nearby_carousel_template_column(nearby_place_df):
         df_len = len(nearby_place_df.columns)
         if df_len > 9:
             df_len = 9
+        column.append(CarouselColumn(
+            title='搜尋其他項目',
+            text = text,
+            actions = [
+                MessageTemplateAction(
+                    label = '返回',
+                    text = f'/back'
+                )
+            ]
+        ))
         for i in range(df_len):
             title = nearby_place_df[i][0]
             if len(title) > 10:
@@ -54,16 +64,6 @@ def make_nearby_carousel_template_column(nearby_place_df):
             if len(text) > 60:
                 text = text[:60]
             print(f'{title}\n{text}')
-            column.append(CarouselColumn(
-                title='搜尋其他項目',
-                text = text,
-                actions = [
-                    MessageTemplateAction(
-                        label = '返回',
-                        text = f'/back'
-                    )
-                ]
-            ))
             column.append(CarouselColumn(
                 title=title,
                 text = text,
