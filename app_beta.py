@@ -82,17 +82,14 @@ def handle_message(event):
     if etext.startswith('/find'):
         proetext = etext.split('/')
         latlong = GetUserInfo(connection, user_id, 'latlong')
-        try:
-            proetext = proetext[2]
-        except:
-            proetext = ''
-            nearby_places = find_nearby_places(catagory=proetext, rankby = RANKBY_DICT[proetext], latlong = latlong)
-            if type(nearby_places) == pd.core.frame.DataFrame:
-                columns = make_nearby_carousel_template_column(nearby_places)
-                if columns != 'ERROR_OCCURED':
-                    multimessage.append(make_nearby_carousel_template(proetext, columns))
-                else:
-                    multimessage.append(TextSendMessage(text = '發生錯誤'))
+        proetext = proetext[2]
+        nearby_places = find_nearby_places(catagory=proetext, rankby = RANKBY_DICT[proetext], latlong = latlong)
+        if type(nearby_places) == pd.core.frame.DataFrame:
+            columns = make_nearby_carousel_template_column(nearby_places)
+            if columns != 'ERROR_OCCURED':
+                multimessage.append(make_nearby_carousel_template(proetext, columns))
+            else:
+                multimessage.append(TextSendMessage(text = '發生錯誤'))
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 
@@ -144,7 +141,7 @@ def handle_message(event):
         latlong = f'{latitude},{longitude}'
         UpdateUserInfo(connection, user_id, 'latlong', latlong)
         label_lst = ['全部', '餐廳', '加油站', '旅館', '景點', '便利商店']
-        text_lst = ['/find', '/find/restaurant', '/find/gas_station', '/find/lodging', '/find/tourist_attraction', '/find/convenience_store'] 
+        text_lst = ['/find/all', '/find/restaurant', '/find/gas_station', '/find/lodging', '/find/tourist_attraction', '/find/convenience_store'] 
         items = make_quick_reply_item_lst(label_lst, text_lst)
         multimessage.append(TextSendMessage(
             text = '請問你要搜尋附近的甚麼項目?',
