@@ -11,7 +11,7 @@ from linebot.models import ConfirmTemplate, URITemplateAction, URIAction, Button
 
 # My module
 from sql import AddUserInfo, CheckUserExistance, GetUserInfo
-from config import LINE_API_KEY, WEBHOOK_HANDLER
+from config import LINE_API_KEY, WEBHOOK_HANDLER, RULES
 from find_places import find_restaurant
 
 line_bot_api = LineBotApi(LINE_API_KEY)
@@ -33,6 +33,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     etext = event.message.text
+    
 
         
 @handler.add(MessageEvent, message=LocationMessage)
@@ -52,16 +53,13 @@ def handle_message(event):
     if is_exist == False:
         multimessage.append(TextSendMessage(text=f'你目前不再資料庫中，現在將立即為你新增'))
         AddUserInfo(connection, user_id)
-        multimessage.append(TextSendMessage(text=f'已經成功將你加入資料庫'))
-        multimessage.append(TextSendMessage(text=f'歡迎你{user_name}，接著請同意我們的使用條款'))
-        line_bot_api.reply_message(event.reply_token, multimessage)
+        multimessage.append(TextSendMessage(text=f'已經成功將你加入資料庫\n歡迎你{user_name.display_name}，接著請同意我們的使用條款'))
     is_agree = GetUserInfo(connection, user_id, 'service')
     if is_agree == 0:
-        mutimessage = []
-        mutimessage.append(TextSendMessage(text="你尚未同意我們的使用條款，請先同意我們的條款\n\
-        條款網址如下"))
-        mutimessage.append(TextSendMessage(text='shorturl.at/fotLM'))
-        mutimessage.append(TemplateSendMessage(
+        multimessage.append(TextSendMessage(text="你尚未同意我們的使用條款，請先同意我們的條款\n"\
+        "條款網址如下"))
+        multimessage.append(TextSendMessage(text=RULES))
+        multimessage.append(TemplateSendMessage(
             alt_text = '同意使用條款?',
             template = ConfirmTemplate(
                 text = '你是否同意我們的使用條款?',
@@ -73,15 +71,10 @@ def handle_message(event):
                     MessageTemplateAction(
                         label = '我不同意',
                         text = '/service/no'
-                    ),
-                    URITemplateAction(
-                        label = '查看條款',
-                        uri = 'shorturl.at/fotLM'
                     )
                 ]
             )
         ))
-        line_bot_api.reply_message(event.reply_token, mutimessage)
     else:
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text = 'hi'))
-        
+        multimessage.append(TextSendMessage(text = 'hi'))
+    line_bot_api.reply_message(event.reply_token, multimessage)
