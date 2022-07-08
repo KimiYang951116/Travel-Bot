@@ -1,5 +1,30 @@
-#3rd party module
-from linebot.models import ConfirmTemplate, URITemplateAction, URIAction, ButtonComponent, FlexSendMessage, IconComponent, ImageComponent, TextComponent, BoxComponent, BubbleContainer, MessageTemplateAction, CarouselTemplate, CarouselColumn, MessageEvent, TextMessage, LocationMessage, TextSendMessage, QuickReply, QuickReplyButton, MessageAction, ImageSendMessage, StickerSendMessage, LocationSendMessage, TemplateSendMessage
+# 3rd party module
+from linebot.models import (
+    ConfirmTemplate,
+    URITemplateAction,
+    URIAction,
+    ButtonComponent,
+    FlexSendMessage,
+    IconComponent,
+    ImageComponent,
+    TextComponent,
+    BoxComponent,
+    BubbleContainer,
+    MessageTemplateAction,
+    CarouselTemplate,
+    CarouselColumn,
+    MessageEvent,
+    TextMessage,
+    LocationMessage,
+    TextSendMessage,
+    QuickReply,
+    QuickReplyButton,
+    MessageAction,
+    ImageSendMessage,
+    StickerSendMessage,
+    LocationSendMessage,
+    TemplateSendMessage
+)
 
 def make_nearby_carousel_template(catagory, column):
     '''
@@ -18,17 +43,16 @@ def make_nearby_carousel_template(catagory, column):
     '''
     try:
         message = TemplateSendMessage(
-            alt_text = f'附近的{catagory}',
-            template=CarouselTemplate(
-            columns=column
-        ))
+            alt_text=f'附近的{catagory}',
+            template=CarouselTemplate(columns=column)
+        )
         return message
-    except:
+    except Exception:
         return 'ERROR_OCCURED'
 
 def make_nearby_carousel_template_column(nearby_place_df):
     '''
-    The function takes a dataframe returned by find_nearby_places and outputs a list of 
+    The function takes a dataframe returned by find_nearby_places and outputs a list of
     CarouselColumns
     it uses linebot sdk module, for more details, see
     https://developers.line.biz/en/docs/messaging-api
@@ -39,7 +63,6 @@ def make_nearby_carousel_template_column(nearby_place_df):
     1. normal : returns a list that contains CarouselColumns that can be used as a input in the
     make_nearby_carousel_template_column
     2. error : returns 'ERROR_OCCURED'
-    
     '''
     try:
         column = []
@@ -48,11 +71,11 @@ def make_nearby_carousel_template_column(nearby_place_df):
             df_len = 9
         column.append(CarouselColumn(
             title='搜尋其他項目',
-            text = '回到前頁',
-            actions = [
+            text='回到前頁',
+            actions=[
                 MessageTemplateAction(
-                    label = '返回',
-                    text = f'/back'
+                    label='返回',
+                    text='/back'
                 )
             ]
         ))
@@ -66,16 +89,16 @@ def make_nearby_carousel_template_column(nearby_place_df):
             print(f'{title}\n{text}')
             column.append(CarouselColumn(
                 title=title,
-                text = text,
-                actions = [
+                text=text,
+                actions=[
                     MessageTemplateAction(
-                        label = '查看詳細資料',
-                        text = f'/detail/{nearby_place_df[i][2]}({nearby_place_df[i][0]})'
+                        label='查看詳細資料',
+                        text=f'/detail/{nearby_place_df[i][2]}({nearby_place_df[i][0]})'
                     )
                 ]
             ))
         return column
-    except:
+    except Exception:
         return 'ERROR_OCCURED'
 
 def make_quick_reply_item_lst(label_lst, text_lst):
@@ -85,7 +108,7 @@ def make_quick_reply_item_lst(label_lst, text_lst):
             for i in range(len(label_lst)):
                 quick_reply_lst.append(QuickReplyButton(action=MessageAction(label=label_lst[i], text=text_lst[i])))
             return quick_reply_lst
-        except:
+        except Exception:
             return 'ERROR_OCCURED'
     else:
         return 'ERROR_OCCURED'

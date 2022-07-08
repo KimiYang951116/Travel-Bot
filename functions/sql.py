@@ -1,9 +1,9 @@
 def CheckUserExistance(conn, uid):
     with conn.cursor() as cursor:
-        sql =  f"SELECT * FROM userinfo WHERE lineid='{uid}'"
+        sql = f"SELECT * FROM userinfo WHERE lineid='{uid}'"
         cursor.execute(sql)
     result_one = cursor.fetchone()
-    if result_one == None:
+    if result_one is None:
         return False
     return True
 
@@ -17,7 +17,7 @@ def AddUserInfo(conn, uid):
 
 def GetUserInfo(conn, uid, item):
     with conn.cursor() as cursor:
-        sql =  f"SELECT * FROM userinfo WHERE lineid='{uid}'"
+        sql = f"SELECT * FROM userinfo WHERE lineid='{uid}'"
         cursor.execute(sql)
     result = cursor.fetchone()
     result = result[item]
@@ -39,6 +39,6 @@ def DeleteUserInfo(conn, uid):
 
 def test_sql_health(conn):
     with conn.cursor() as cursor:
-        sql = f"select * from userinfo"
+        sql = "select * from userinfo"
         cursor.execute(sql)
     return cursor.fetchone()
