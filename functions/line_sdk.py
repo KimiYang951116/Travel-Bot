@@ -1,29 +1,12 @@
 # 3rd party module
 from linebot.models import (
-    ConfirmTemplate,
-    URITemplateAction,
-    URIAction,
-    ButtonComponent,
-    FlexSendMessage,
-    IconComponent,
-    ImageComponent,
-    TextComponent,
-    BoxComponent,
-    BubbleContainer,
     MessageTemplateAction,
     CarouselTemplate,
     CarouselColumn,
-    MessageEvent,
-    TextMessage,
-    LocationMessage,
-    TextSendMessage,
-    QuickReply,
     QuickReplyButton,
     MessageAction,
-    ImageSendMessage,
-    StickerSendMessage,
-    LocationSendMessage,
-    TemplateSendMessage
+    TemplateSendMessage,
+    PostbackAction
 )
 
 def make_nearby_carousel_template(catagory, column):
@@ -106,7 +89,10 @@ def make_quick_reply_item_lst(label_lst, text_lst):
     if len(label_lst) == len(text_lst):
         try:
             for i in range(len(label_lst)):
-                quick_reply_lst.append(QuickReplyButton(action=MessageAction(label=label_lst[i], text=text_lst[i])))
+                quick_reply_lst.append(QuickReplyButton(action=PostbackAction(
+                    label=label_lst[i],
+                    data=f'action={text_lst[i]}'
+                )))
             return quick_reply_lst
         except Exception:
             return 'ERROR_OCCURED'
