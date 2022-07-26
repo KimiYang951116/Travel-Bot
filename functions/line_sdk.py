@@ -120,10 +120,6 @@ def make_bubble_component(place_name, detail_lst):
                 ),
             ]
         ),
-        hero = ImageComponent(
-            url = 'https://bouchonbendigo.com.au/wp-content/uploads/2022/03/istockphoto-1316145932-170667a.jpg',
-            size = 'full',
-        ),
         body = BoxComponent(
             layout = 'vertical',
             contents = [
