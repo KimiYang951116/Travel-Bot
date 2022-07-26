@@ -15,6 +15,7 @@ def AddUserInfo(conn, uid):
         cursor.execute(sql)
     conn.commit()
 
+
 def GetUserInfo(conn, uid, item):
     with conn.cursor() as cursor:
         sql = f"SELECT * FROM userinfo WHERE lineid='{uid}'"
@@ -22,6 +23,7 @@ def GetUserInfo(conn, uid, item):
     result = cursor.fetchone()
     result = result[item]
     return result
+
 
 def UpdateUserInfo(conn, uid, item, change):
     with conn.cursor() as cursor:

@@ -6,7 +6,14 @@ from linebot.models import (
     QuickReplyButton,
     MessageAction,
     TemplateSendMessage,
-    PostbackAction
+    PostbackAction,
+    BubbleContainer,
+    BoxComponent,
+    TextComponent,
+    ImageComponent,
+    IconComponent,
+    ButtonComponent,
+    URIAction
 )
 
 def make_nearby_carousel_template(catagory, column):
@@ -32,6 +39,7 @@ def make_nearby_carousel_template(catagory, column):
         return message
     except Exception:
         return 'ERROR_OCCURED'
+
 
 def make_nearby_carousel_template_column(nearby_place_df):
     '''
@@ -84,17 +92,119 @@ def make_nearby_carousel_template_column(nearby_place_df):
     except Exception:
         return 'ERROR_OCCURED'
 
+
 def make_quick_reply_item_lst(label_lst, text_lst):
     quick_reply_lst = []
     if len(label_lst) == len(text_lst):
         try:
             for i in range(len(label_lst)):
-                quick_reply_lst.append(QuickReplyButton(action=PostbackAction(
-                    label=label_lst[i],
-                    data=f'action={text_lst[i]}'
-                )))
+                quick_reply_lst.append(QuickReplyButton(action=MessageAction(label=label_lst[i], text=text_lst[i])))
             return quick_reply_lst
         except Exception:
             return 'ERROR_OCCURED'
     else:
         return 'ERROR_OCCURED'
+
+
+def make_bubble_component(place_name, detail_lst):
+    openhr, address, phone, rate, price = detail_lst[0], detail_lst[1], detail_lst[2], detail_lst[3], detail_lst[4]
+    bubble = BubbleContainer(
+        direction = 'ltr',
+        header = BoxComponent(
+            layout = 'vertical',
+            contents = [
+                TextComponent(
+                    text = place_name,
+                    weight = 'bold',
+                    size = 'xxl'
+                ),
+            ]
+        ),
+        hero = ImageComponent(
+            url = 'https://bouchonbendigo.com.au/wp-content/uploads/2022/03/istockphoto-1316145932-170667a.jpg',
+            size = 'full',
+        ),
+        body = BoxComponent(
+            layout = 'vertical',
+            contents = [
+                BoxComponent(
+                    layout = 'baseline',
+                    contents = [
+                        IconComponent(
+                            url = 'https://cdn-icons-png.flaticon.com/512/217/217887.png',
+                            size = 'lg'
+                        ),
+                        TextComponent(
+                            text = f'  {phone}',
+                            size = 'lg'
+                        )
+                    ]
+                ),
+                BoxComponent(
+                    layout = 'baseline',
+                    contents = [
+                        IconComponent(
+                            url = 'https://cdn-icons-png.flaticon.com/512/235/235861.png',
+                            size = 'lg'
+                        ),
+                        TextComponent(
+                            text = f'  {address}',
+                            size = 'md'
+                        )
+                    ]
+                ),
+                BoxComponent(
+                    layout = 'baseline',
+                    contents = [
+                        IconComponent(
+                            url = 'https://img.tukuppt.com/ad_preview/00/31/67/ObvzW3N3kV.jpg!/both/260x260',
+                            size = 'lg'
+                        ),
+                        TextComponent(
+                            text = f'  {openhr}',
+                            size = 'md'
+                        )
+                    ]
+                ),
+                BoxComponent(
+                    layout = 'baseline',
+                    contents = [
+                        IconComponent(
+                            url = 'https://cdn-icons-png.flaticon.com/512/3629/3629625.png', 
+                            size = 'lg'
+                        ),
+                        TextComponent(
+                            text = f'  {rate}',
+                            size = 'md'
+                        ),
+                        IconComponent(
+                            url = 'https://cdn-icons-png.flaticon.com/512/189/189715.png', 
+                            size = 'lg'
+                        ),
+                        TextComponent(
+                            text = f'  {price}',
+                            size = 'md'
+                        ),
+                    ]
+                ),
+                BoxComponent(
+                    layout = 'horizontal',
+                    margin = 'xxl',
+                    contents = [
+                        ButtonComponent(
+                            style = 'primary',
+                            height = 'sm',
+                            action = URIAction(label = '電話聯絡', uri = f'tel:{phone}'),
+                        ),
+                        ButtonComponent(
+                            style = 'secondary',
+                            height = 'sm',
+                            action = URIAction(label = '查看路線', uri = 'https://meet.google.com/csr-igzo-tjs')
+                        )
+                    ]
+                )
+        
+            ]
+        ),
+    )
+    return bubble

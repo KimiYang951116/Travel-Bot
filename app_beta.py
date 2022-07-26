@@ -1,8 +1,7 @@
 # 3rd party module
 from flask import Flask, request, abort
-import pymysql
 import pandas as pd
-from urllib.parse import parse_qsl
+import pymysql
 
 # Line bot module
 from linebot import LineBotApi, WebhookHandler
@@ -33,13 +32,15 @@ from linebot.models import (
     ImageSendMessage,
     StickerSendMessage,
     LocationSendMessage,
-    TemplateSendMessage
+    TemplateSendMessage,
+    PostbackEvent
 )
 
 # My module
 from functions.sql import AddUserInfo, CheckUserExistance, GetUserInfo, UpdateUserInfo
-from functions.find_places import find_nearby_places
+from functions.find_places import find_nearby_places, find_place_details
 from functions.line_sdk import (
+    make_bubble_component,
     make_nearby_carousel_template,
     make_nearby_carousel_template_column,
     make_quick_reply_item_lst
@@ -121,6 +122,13 @@ def handle_text_message(event):
                 multimessage.append(make_nearby_carousel_template(proetext, columns))
             else:
                 multimessage.append(TextSendMessage(text='發生錯誤'))
+    if etext.startswith('/details'):
+        information = etext.split('/')[2]
+        placeID = information.split('(')[0]
+        place_name = information.split('(')[1].split(')')[0]
+        detail = find_place_details(placeID)
+        bubble = make_bubble_component(place_name, detail)
+        multimessage.append(FlexSendMessage(alt_text = '彈性配置', contents=bubble))
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 
@@ -178,6 +186,7 @@ def handle_location_message(event):
             )
         )
     line_bot_api.reply_message(event.reply_token, multimessage)
+
 
 if __name__ == '__main__':
     app.run()

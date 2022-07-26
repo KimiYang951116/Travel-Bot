@@ -1,6 +1,7 @@
 # 3rd party module
 import requests
 import pandas as pd
+import time
 
 # my module
 from config import GOOGLE_MAPS_API_KEY
@@ -57,3 +58,18 @@ def find_nearby_places(catagory, latlong, rankby='distance', api_key=GOOGLE_MAPS
         return df
     else:
         return response['status']
+
+
+def find_place_details(placeId, api_key=GOOGLE_MAPS_API_KEY):
+    url = f'https://maps.googleapis.com/maps/api/place/details/json?place_id={placeId}&key={api_key}&language=zH-TW'
+    response = requests.request("GET", url).json()
+    loc_time = time.localtime()
+    openhr = response['result']['opening_hours']['weekday_text'].get(loc_time.tm_wday, '無法取得營業時間')
+    address = response['result'].get('formatted_address', '無法取得地址')
+    phone = response['result'].get('formatted_phone_number', '無法取得電話')
+    if phone != '無法取得電話':
+        phone = phone.replace(' ', '')
+    rate = response['result'].get('rating', '無法取得評分')
+    price = response['result'].get('price_level', '無法取得價錢')
+    result = [openhr, address, phone, rate, price]
+    return result
