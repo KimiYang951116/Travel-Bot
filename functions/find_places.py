@@ -64,7 +64,10 @@ def find_place_details(placeId, api_key=GOOGLE_MAPS_API_KEY):
     url = f'https://maps.googleapis.com/maps/api/place/details/json?place_id={placeId}&key={api_key}&language=zH-TW'
     response = requests.request("GET", url).json()
     loc_time = time.localtime()
-    openhr = response['result']['opening_hours']['weekday_text'].get(loc_time.tm_wday, '無法取得營業時間')
+    try:
+        openhr = response['result']['opening_hours']['weekday_text'][loc_time.tm_wday]
+    except:
+        openhr = '無法取得營業時間'
     address = response['result'].get('formatted_address', '無法取得地址')
     phone = response['result'].get('formatted_phone_number', '無法取得電話')
     if phone != '無法取得電話':
