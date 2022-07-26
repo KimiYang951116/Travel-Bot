@@ -122,7 +122,7 @@ def handle_text_message(event):
                 multimessage.append(make_nearby_carousel_template(proetext, columns))
             else:
                 multimessage.append(TextSendMessage(text='發生錯誤'))
-    if etext.startswith('/details'):
+    if etext.startswith('/detail'):
         information = etext.split('/')[2]
         placeID = information.split('(')[0]
         place_name = information.split('(')[1].split(')')[0]
