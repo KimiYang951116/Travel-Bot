@@ -177,7 +177,7 @@ def handle_location_message(event):
         latlong = f'{latitude},{longitude}'
         UpdateUserInfo(connection, user_id, 'latlong', latlong)
         label_lst = ['全部', '餐廳', '加油站', '旅館', '景點', '便利商店']
-        text_lst = ['find/all', 'find/restaurant', 'find/gas_station', 'find/lodging', 'find/tourist_attraction', 'find/convenience_store']  # noqa: E501
+        text_lst = ['/find/all', '/find/restaurant', '/find/gas_station', '/find/lodging', '/find/tourist_attraction', '/find/convenience_store']  # noqa: E501
         items = make_quick_reply_item_lst(label_lst, text_lst)
         multimessage.append(
             TextSendMessage(
