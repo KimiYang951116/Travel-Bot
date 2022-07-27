@@ -213,7 +213,7 @@ def handle_location_message(event):
                 multimessage.append(make_nearby_carousel_template(proetext, columns))
             else:
                 multimessage.append(TextSendMessage(text='發生錯誤'))
-        if edata.startswith('/detail'):
+        if edata.startswith('/'):
             print('yes')
             information = edata.split('/')[2]
             placeID = information.split('(')[0]
