@@ -190,7 +190,30 @@ def handle_location_message(event):
 
 @handler.add(PostbackEvent)
 def handle_location_message(event):
-    print(event.postback.data)
+    connection = pymysql.connect(
+        host="us-cdbr-east-05.cleardb.net",
+        user="b5f2e205874506",
+        password="3291697e",
+        db="heroku_b2cccf87a825db4",
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    edata = event.postback.data
+    multimessage = []
+    user_id = event.source.user_id
+    if edata.startswith('/find'):
+        proetext = edata.split('/')
+        latlong = GetUserInfo(connection, user_id, 'latlong')
+        proetext = proetext[2]
+        nearby_places = find_nearby_places(catagory=proetext, rankby=RANKBY_DICT[proetext], latlong=latlong)
+        if type(nearby_places) == pd.core.frame.DataFrame:
+            columns = make_nearby_carousel_template_column(nearby_places)
+            if columns != 'ERROR_OCCURED':
+                multimessage.append(make_nearby_carousel_template(proetext, columns))
+            else:
+                multimessage.append(TextSendMessage(text='發生錯誤'))
+        if len(multimessage) > 0 and len(multimessage) < 6:
+            line_bot_api.reply_message(event.reply_token, multimessage)
 
 if __name__ == '__main__':
     app.run()
