@@ -201,6 +201,7 @@ def handle_location_message(event):
     edata = event.postback.data
     multimessage = []
     user_id = event.source.user_id
+    print(edata)
     if edata.startswith('/find'):
         proetext = edata.split('/')
         latlong = GetUserInfo(connection, user_id, 'latlong')
