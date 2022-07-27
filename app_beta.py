@@ -212,6 +212,13 @@ def handle_location_message(event):
                 multimessage.append(make_nearby_carousel_template(proetext, columns))
             else:
                 multimessage.append(TextSendMessage(text='發生錯誤'))
+        if edata.startswith('/detail'):
+            information = edata.split('/')[2]
+            placeID = information.split('(')[0]
+            place_name = information.split('(')[1].split(')')[0]
+            detail = find_place_details(placeID)
+            bubble = make_bubble_component(place_name, detail)
+            multimessage.append(FlexSendMessage(alt_text = '彈性配置', contents=bubble))
         if len(multimessage) > 0 and len(multimessage) < 6:
             line_bot_api.reply_message(event.reply_token, multimessage)
 

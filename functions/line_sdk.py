@@ -13,7 +13,8 @@ from linebot.models import (
     ImageComponent,
     IconComponent,
     ButtonComponent,
-    URIAction
+    URIAction,
+    PostbackTemplateAction
 )
 
 def make_nearby_carousel_template(catagory, column):
@@ -82,10 +83,7 @@ def make_nearby_carousel_template_column(nearby_place_df):
                 title=title,
                 text=text,
                 actions=[
-                    MessageTemplateAction(
-                        label='查看詳細資料',
-                        text=f'/detail/{nearby_place_df[i][2]}({nearby_place_df[i][0]})'
-                    )
+                    PostbackTemplateAction(label='查看詳細資料', data=f'/detail/{nearby_place_df[i][2]}({nearby_place_df[i][0]})')
                 ]
             ))
         return column
