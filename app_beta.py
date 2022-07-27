@@ -190,7 +190,7 @@ def handle_location_message(event):
 
 @handler.add(PostbackEvent)
 def handle_location_message(event):
-    print(event)
+    print(event['postback']['data'])
 
 if __name__ == '__main__':
     app.run()
