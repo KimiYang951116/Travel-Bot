@@ -1,4 +1,2 @@
-text = '/detail/ChIJ3cfgKtgBaDQRdUAPzn8Adyo(政大安九食堂-嗶啵)'
-information = text.split('/')[2]
-placeID = information.split('(')[0]
-place_name = information.split('(')[1].split(')')[0]
+event = {"postback": {"data": "hihi"}, "replyToken": "7acc66e963b84369b8c238821364450d", "source": {"type": "user", "userId": "Uc10a26bd60f68b67b4db78d4ee14b8d2"}, "timestamp": 1658882268566, "type": "postback"}
+print(event['postback']['data'])
