@@ -190,12 +190,12 @@ def make_bubble_component(place_name, detail_lst):
                         ButtonComponent(
                             style = 'primary',
                             height = 'sm',
-                            action = URIAction(label = '電話聯絡', uri = f'tel:{phone}'),
+                            action = URIAction(label ='電話聯絡', uri = f'tel:{phone}'),
                         ),
                         ButtonComponent(
                             style = 'secondary',
                             height = 'sm',
-                            action = URIAction(label = '查看路線', uri = 'https://meet.google.com/csr-igzo-tjs')
+                            action = PostbackAction(label='測試用', data='hihi')
                         )
                     ]
                 )
