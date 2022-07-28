@@ -212,6 +212,7 @@ def handle_location_message(event):
             if proetext == '1':
                 UpdateUserInfo(connection, user_id, 'service', 1)
                 multimessage.append(TextSendMessage(text='OK，你現在可以開始使用Travel Bot 的所有功能'))
+                line_bot_api.link_rich_menu_to_user(user_id=user_id, rich_menu_id='richmenu-8fce423c47c1d11eed9a8074059b0780')
             else:
                 multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))
         else:
@@ -234,25 +235,28 @@ def handle_location_message(event):
                 )
             ))
     else:
-        if edata.startswith('/find'):
-            proetext = edata.split('/')
-            latlong = GetUserInfo(connection, user_id, 'latlong')
-            proetext = proetext[2]
-            nearby_places = find_nearby_places(catagory=proetext, rankby=RANKBY_DICT[proetext], latlong=latlong)
-            if type(nearby_places) == pd.core.frame.DataFrame:
-                columns = make_nearby_carousel_template_column(nearby_places)
-                if columns != 'ERROR_OCCURED':
-                    multimessage.append(make_nearby_carousel_template(proetext, columns))
-                else:
-                    multimessage.append(TextSendMessage(text='發生錯誤'))
-        if edata.startswith('/detail'):
-            print('yes')
-            information = edata.split('/')[2]
-            placeID = information.split('(')[0]
-            place_name = information.split('(')[1].split(')')[0]
-            detail = find_place_details(placeID)
-            bubble = make_bubble_component(place_name, detail)
-            multimessage.append(FlexSendMessage(alt_text = '彈性配置', contents=bubble))
+        latlong = GetUserInfo(connection, user_id, 'latlong')
+        if latlong != 'None':
+            if edata.startswith('/find'):
+                proetext = edata.split('/')
+                proetext = proetext[2]
+                nearby_places = find_nearby_places(catagory=proetext, rankby=RANKBY_DICT[proetext], latlong=latlong)
+                if type(nearby_places) == pd.core.frame.DataFrame:
+                    columns = make_nearby_carousel_template_column(nearby_places)
+                    if columns != 'ERROR_OCCURED':
+                        multimessage.append(make_nearby_carousel_template(proetext, columns))
+                    else:
+                        multimessage.append(TextSendMessage(text='發生錯誤'))
+            if edata.startswith('/detail'):
+                print('yes')
+                information = edata.split('/')[2]
+                placeID = information.split('(')[0]
+                place_name = information.split('(')[1].split(')')[0]
+                detail = find_place_details(placeID)
+                bubble = make_bubble_component(place_name, detail)
+                multimessage.append(FlexSendMessage(alt_text = '彈性配置', contents=bubble))
+        else:
+            multimessage.append(TextSendMessage(text='你尚未提供你的位置'))
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 
