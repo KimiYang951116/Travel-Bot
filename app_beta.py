@@ -33,7 +33,8 @@ from linebot.models import (
     StickerSendMessage,
     LocationSendMessage,
     TemplateSendMessage,
-    PostbackEvent
+    PostbackEvent,
+    VideoSendMessage
 )
 
 # My module
@@ -236,6 +237,9 @@ def handle_location_message(event):
             ))
     else:
         latlong = GetUserInfo(connection, user_id, 'latlong')
+        if edata == '如何分享位置':
+            multimessage.append(TextSendMessage(text='請觀看影片'))
+            multimessage.append(VideoSendMessage(original_content_url='https://www.youtube.com/shorts/TJGkg-buC8k'))
         if latlong != 'None':
             if edata.startswith('/find'):
                 proetext = edata.split('/')

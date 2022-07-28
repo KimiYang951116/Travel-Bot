@@ -39,7 +39,7 @@ line_bot_api = LineBotApi(LINE_API_KEY)
 # with open("menu_1.jpg", 'rb') as f:
 #     line_bot_api.set_rich_menu_image("richmenu-8fce423c47c1d11eed9a8074059b0780", "image/jpeg", f)
 
-# line_bot_api.link_rich_menu_to_user('Uc10a26bd60f68b67b4db78d4ee14b8d2', "richmenu-8fce423c47c1d11eed9a8074059b0780")
+line_bot_api.link_rich_menu_to_user('Uc10a26bd60f68b67b4db78d4ee14b8d2', "richmenu-8f3bec982eb2b920d60519b5cfbc22a3")
 
-line_bot_api.set_default_rich_menu("richmenu-8f3bec982eb2b920d60519b5cfbc22a3")
+# line_bot_api.set_default_rich_menu("richmenu-8f3bec982eb2b920d60519b5cfbc22a3")
 
