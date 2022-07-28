@@ -239,7 +239,7 @@ def handle_location_message(event):
         latlong = GetUserInfo(connection, user_id, 'latlong')
         if edata == '如何分享位置':
             multimessage.append(TextSendMessage(text='請觀看影片'))
-            multimessage.append(VideoSendMessage(original_content_url='https://vimeo.com/734206154', preview_image_url='https://cdn1.iconfinder.com/data/icons/growth-marketing/48/marketing_video_marketing-512.png'))
+            multimessage.append(TextSendMessage(text='shorturl.at/AT579'))
         if latlong != 'None':
             if edata.startswith('/find'):
                 proetext = edata.split('/')
