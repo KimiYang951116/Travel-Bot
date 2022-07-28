@@ -79,9 +79,7 @@ def handle_text_message(event):
     multimessage = []
     is_exist = CheckUserExistance(connection, user_id)
     if not is_exist:
-        multimessage.append(TextSendMessage(text='你目前不再資料庫中，現在將立即為你新增'))
         AddUserInfo(connection, user_id)
-        multimessage.append(TextSendMessage(text=f'已經成功將你加入資料庫\n歡迎你{user_name.display_name}，接著請同意我們的使用條款'))
     is_agree = GetUserInfo(connection, user_id, 'service')
     if is_agree == 0:
         if etext.startswith('/service'):
@@ -111,24 +109,25 @@ def handle_text_message(event):
                     ]
                 )
             ))
-    if etext.startswith('/find'):
-        proetext = etext.split('/')
-        latlong = GetUserInfo(connection, user_id, 'latlong')
-        proetext = proetext[2]
-        nearby_places = find_nearby_places(catagory=proetext, rankby=RANKBY_DICT[proetext], latlong=latlong)
-        if type(nearby_places) == pd.core.frame.DataFrame:
-            columns = make_nearby_carousel_template_column(nearby_places)
-            if columns != 'ERROR_OCCURED':
-                multimessage.append(make_nearby_carousel_template(proetext, columns))
-            else:
-                multimessage.append(TextSendMessage(text='發生錯誤'))
-    if etext.startswith('/detail'):
-        information = etext.split('/')[2]
-        placeID = information.split('(')[0]
-        place_name = information.split('(')[1].split(')')[0]
-        detail = find_place_details(placeID)
-        bubble = make_bubble_component(place_name, detail)
-        multimessage.append(FlexSendMessage(alt_text = '彈性配置', contents=bubble))
+        # if etext.startswith('/find'):
+        #     proetext = etext.split('/')
+        #     latlong = GetUserInfo(connection, user_id, 'latlong')
+        #     if latlong != 'None':
+        #         proetext = proetext[2]
+        #         nearby_places = find_nearby_places(catagory=proetext, rankby=RANKBY_DICT[proetext], latlong=latlong)
+        #         if type(nearby_places) == pd.core.frame.DataFrame:
+        #             columns = make_nearby_carousel_template_column(nearby_places)
+        #             if columns != 'ERROR_OCCURED':
+        #                 multimessage.append(make_nearby_carousel_template(proetext, columns))
+        #             else:
+        #                 multimessage.append(TextSendMessage(text='發生錯誤'))
+        # if etext.startswith('/detail'):
+        #     information = etext.split('/')[2]
+        #     placeID = information.split('(')[0]
+        #     place_name = information.split('(')[1].split(')')[0]
+        #     detail = find_place_details(placeID)
+        #     bubble = make_bubble_component(place_name, detail)
+        #     multimessage.append(FlexSendMessage(alt_text = '彈性配置', contents=bubble))
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 
@@ -202,6 +201,38 @@ def handle_location_message(event):
     multimessage = []
     user_id = event.source.user_id
     print(edata)
+    is_exist = CheckUserExistance(connection, user_id)
+    if not is_exist:
+        AddUserInfo(connection, user_id)
+    is_agree = GetUserInfo(connection, user_id, 'service')
+    if is_agree == 0:
+        if edata.startswith('/service'):
+            proetext = edata.split('/')
+            proetext = proetext[2]
+            if proetext == '1':
+                UpdateUserInfo(connection, user_id, 'service', 1)
+                multimessage.append(TextSendMessage(text='OK，你現在可以開始使用Travel Bot 的所有功能'))
+            else:
+                multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))
+        else:
+            multimessage.append(TextSendMessage(text="你尚未同意我們的個人資料告知事項及同意事項(以下簡稱同意事項)，請先同意我們的同意事項\n條款如下"))
+            multimessage.append(TextSendMessage(text=RULES))
+            multimessage.append(TemplateSendMessage(
+                alt_text='同意我們的同意事項?',
+                template=ConfirmTemplate(
+                    text='你是否同意我們的同意事項?',
+                    actions=[
+                        PostbackTemplateAction(
+                            label='我同意',
+                            data = '/service/1'
+                        ),
+                        PostbackTemplateAction(
+                            label='我不同意',
+                            data='/service/0'
+                        )
+                    ]
+                )
+            ))
     if edata.startswith('/find'):
         proetext = edata.split('/')
         latlong = GetUserInfo(connection, user_id, 'latlong')

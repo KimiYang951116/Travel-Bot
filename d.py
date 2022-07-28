@@ -1,2 +1,0 @@
-event = {"postback": {"data": "hihi"}, "replyToken": "7acc66e963b84369b8c238821364450d", "source": {"type": "user", "userId": "Uc10a26bd60f68b67b4db78d4ee14b8d2"}, "timestamp": 1658882268566, "type": "postback"}
-print(event['postback']['data'])
