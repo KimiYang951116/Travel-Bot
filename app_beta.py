@@ -239,7 +239,7 @@ def handle_location_message(event):
         latlong = GetUserInfo(connection, user_id, 'latlong')
         if edata == '如何分享位置':
             multimessage.append(TextSendMessage(text='請觀看影片'))
-            multimessage.append(VideoSendMessage(original_content_url='https://www.youtube.com/shorts/TJGkg-buC8k'))
+            multimessage.append(VideoSendMessage(original_content_url='https://youtube.com/shorts/yrloArFh8Sc?feature=share'))
         if latlong != 'None':
             if edata.startswith('/find'):
                 proetext = edata.split('/')
