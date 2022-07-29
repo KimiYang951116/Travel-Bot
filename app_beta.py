@@ -36,7 +36,7 @@ from linebot.models import (
     PostbackEvent,
     VideoSendMessage
 )
-from sympy import use
+
 
 # My module
 from functions.sql import AddUserInfo, CheckUserExistance, GetUserInfo, UpdateUserInfo
