@@ -26,3 +26,5 @@ RANKBY_DICT = {
     'tourist_attraction': 'prominence',
     'convenience_store': 'distance'
 }
+default_richmenu_id = 'richmenu-338c645051065cceebc3b1c65ffc7b1b'
+no_location_richmenu_id = 'richmenu-818171f764b0fdb76d8e4d896ee3efa0'

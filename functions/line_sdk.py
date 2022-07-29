@@ -1,22 +1,6 @@
 # 3rd party module
-from linebot.models import (
-    MessageTemplateAction,
-    CarouselTemplate,
-    CarouselColumn,
-    QuickReplyButton,
-    MessageAction,
-    TemplateSendMessage,
-    PostbackAction,
-    BubbleContainer,
-    BoxComponent,
-    TextComponent,
-    ImageComponent,
-    IconComponent,
-    ButtonComponent,
-    URIAction,
-    PostbackTemplateAction
-)
-
+from linebot.models import *
+from config import *
 def make_nearby_carousel_template(catagory, column):
     '''
     The function takes the list returned by make_nearby_carousel_template_column as
@@ -202,3 +186,13 @@ def make_bubble_component(place_name, detail_lst):
         ),
     )
     return bubble
+
+
+def rich_menu_switch(api, is_exist, have_location, user_id):
+    rich_menu_id = api.get_rich_menu_id_of_user(user_id)
+    if is_exist == False:
+        if rich_menu_id != default_richmenu_id:
+            api.link_rich_menu_to_user(user_id, default_richmenu_id)
+    elif have_location == False:
+        if rich_menu_id != no_location_richmenu_id:
+            api.link_rich_menu_to_user(user_id, no_location_richmenu_id)

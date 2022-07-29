@@ -36,6 +36,7 @@ from linebot.models import (
     PostbackEvent,
     VideoSendMessage
 )
+from sympy import use
 
 # My module
 from functions.sql import AddUserInfo, CheckUserExistance, GetUserInfo, UpdateUserInfo
@@ -44,7 +45,8 @@ from functions.line_sdk import (
     make_bubble_component,
     make_nearby_carousel_template,
     make_nearby_carousel_template_column,
-    make_quick_reply_item_lst
+    make_quick_reply_item_lst,
+    rich_menu_switch
 )
 from config import LINE_API_KEY, RANKBY_DICT, WEBHOOK_HANDLER, RULES
 
@@ -64,73 +66,54 @@ def callback():
     return 'ok'
 
 
-# @handler.add(MessageEvent, message=TextMessage)
-# def handle_text_message(event):
-    # connection = pymysql.connect(
-    #     host="us-cdbr-east-05.cleardb.net",
-    #     user="b5f2e205874506",
-    #     password="3291697e",
-    #     db="heroku_b2cccf87a825db4",
-    #     charset='utf8mb4',
-    #     cursorclass=pymysql.cursors.DictCursor
-    # )
-    # etext = event.message.text
-    # user_id = event.source.user_id
-    # user_name = line_bot_api.get_profile(user_id)
-    # multimessage = []
-    # is_exist = CheckUserExistance(connection, user_id)
-    # if not is_exist:
-    #     AddUserInfo(connection, user_id)
-    # is_agree = GetUserInfo(connection, user_id, 'service')
-    # if is_agree == 0:
-    #     if etext.startswith('/service'):
-    #         proetext = etext.split('/')
-    #         proetext = proetext[2]
-    #         if proetext == '1':
-    #             UpdateUserInfo(connection, user_id, 'service', 1)
-    #             multimessage.append(TextSendMessage(text='OK，你現在可以開始使用Travel Bot 的所有功能'))
-    #         else:
-    #             multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))
-    #     else:
-    #         multimessage.append(TextSendMessage(text="你尚未同意我們的個人資料告知事項及同意事項(以下簡稱同意事項)，請先同意我們的同意事項\n條款如下"))
-    #         multimessage.append(TextSendMessage(text=RULES))
-    #         multimessage.append(TemplateSendMessage(
-    #             alt_text='同意我們的同意事項?',
-    #             template=ConfirmTemplate(
-    #                 text='你是否同意我們的同意事項?',
-    #                 actions=[
-    #                     MessageTemplateAction(
-    #                         label='我同意',
-    #                         text='/service/1'
-    #                     ),
-    #                     MessageTemplateAction(
-    #                         label='我不同意',
-    #                         text='/service/0'
-    #                     )
-    #                 ]
-    #             )
-    #         ))
-        # if etext.startswith('/find'):
-        #     proetext = etext.split('/')
-        #     latlong = GetUserInfo(connection, user_id, 'latlong')
-        #     if latlong != 'None':
-        #         proetext = proetext[2]
-        #         nearby_places = find_nearby_places(catagory=proetext, rankby=RANKBY_DICT[proetext], latlong=latlong)
-        #         if type(nearby_places) == pd.core.frame.DataFrame:
-        #             columns = make_nearby_carousel_template_column(nearby_places)
-        #             if columns != 'ERROR_OCCURED':
-        #                 multimessage.append(make_nearby_carousel_template(proetext, columns))
-        #             else:
-        #                 multimessage.append(TextSendMessage(text='發生錯誤'))
-        # if etext.startswith('/detail'):
-        #     information = etext.split('/')[2]
-        #     placeID = information.split('(')[0]
-        #     place_name = information.split('(')[1].split(')')[0]
-        #     detail = find_place_details(placeID)
-        #     bubble = make_bubble_component(place_name, detail)
-        #     multimessage.append(FlexSendMessage(alt_text = '彈性配置', contents=bubble))
-    # if len(multimessage) > 0 and len(multimessage) < 6:
-    #     line_bot_api.reply_message(event.reply_token, multimessage)
+@handler.add(MessageEvent, message=TextMessage)
+def handle_text_message(event):
+    connection = pymysql.connect(
+        host="us-cdbr-east-05.cleardb.net",
+        user="b5f2e205874506",
+        password="3291697e",
+        db="heroku_b2cccf87a825db4",
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    etext = event.message.text
+    user_id = event.source.user_id
+    user_name = line_bot_api.get_profile(user_id)
+    multimessage = []
+    is_exist = CheckUserExistance(connection, user_id)
+    if not is_exist:
+        AddUserInfo(connection, user_id)
+    is_agree = GetUserInfo(connection, user_id, 'service')
+    if is_agree == 0:
+        if etext.startswith('/service'):
+            proetext = etext.split('/')
+            proetext = proetext[2]
+            if proetext == '1':
+                UpdateUserInfo(connection, user_id, 'service', 1)
+                multimessage.append(TextSendMessage(text='OK，你現在可以開始使用Travel Bot 的所有功能'))
+            else:
+                multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))
+        else:
+            multimessage.append(TextSendMessage(text="你尚未同意我們的個人資料告知事項及同意事項(以下簡稱同意事項)，請先同意我們的同意事項\n條款如下"))
+            multimessage.append(TextSendMessage(text=RULES))
+            multimessage.append(TemplateSendMessage(
+                alt_text='同意我們的同意事項?',
+                template=ConfirmTemplate(
+                    text='你是否同意我們的同意事項?',
+                    actions=[
+                        MessageTemplateAction(
+                            label='我同意',
+                            text='/service/1'
+                        ),
+                        MessageTemplateAction(
+                            label='我不同意',
+                            text='/service/0'
+                        )
+                    ]
+                )
+            ))
+    if len(multimessage) > 0 and len(multimessage) < 6:
+        line_bot_api.reply_message(event.reply_token, multimessage)
 
 
 @handler.add(MessageEvent, message=LocationMessage)
@@ -213,7 +196,6 @@ def handle_location_message(event):
             if proetext == '1':
                 UpdateUserInfo(connection, user_id, 'service', 1)
                 multimessage.append(TextSendMessage(text='OK，你現在可以開始使用Travel Bot 的所有功能'))
-                line_bot_api.link_rich_menu_to_user(user_id=user_id, rich_menu_id='richmenu-8fce423c47c1d11eed9a8074059b0780')
             else:
                 multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))
         else:
@@ -261,6 +243,8 @@ def handle_location_message(event):
                 multimessage.append(FlexSendMessage(alt_text = '彈性配置', contents=bubble))
         else:
             multimessage.append(TextSendMessage(text='你尚未提供你的位置'))
+    have_location = True if latlong != 'None' else False
+    rich_menu_switch(line_bot_api, GetUserInfo(connection, user_id), have_location)
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 
