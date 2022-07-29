@@ -1,1 +1,1 @@
-web gunicorn app_beta:app
+web gunicorn travel_bot/app_beta:app
