@@ -32,7 +32,7 @@ from functions.line_sdk import (
     make_quick_reply_item_lst,
     rich_menu_switch
 )
-from config import LINE_API_KEY, RANKBY_DICT, WEBHOOK_HANDLER, RULES
+from config import LINE_API_KEY, RANKBY_DICT, WEBHOOK_HANDLER, no_location_richmenu_id, default_richmenu_id
 
 line_bot_api = LineBotApi(LINE_API_KEY)
 handler = WebhookHandler(WEBHOOK_HANDLER)
@@ -66,122 +66,10 @@ def handle_text_message(event):
     is_exist = CheckUserExistance(connection, user_id)
     if not is_exist:
         AddUserInfo(connection, user_id)
-    is_agree = GetUserInfo(connection, user_id, 'service')
-    if is_agree == 0:
-        if etext.startswith('/service'):
-            proetext = etext.split('/')
-            proetext = proetext[2]
-            if proetext == '1':
-                UpdateUserInfo(connection, user_id, 'service', 1)
-                multimessage.append(TextSendMessage(text='OK，你現在可以開始使用Travel Bot 的所有功能'))  # noqa: E501
-            else:
-                multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))  # noqa: E501
-        else:
-            multimessage.append(TextSendMessage(text="你尚未同意我們的個人資料告知事項及同意事項(以下簡稱同意事項)，請先同意我們的同意事項\n條款如下"))  # noqa: E501
-            multimessage.append(TextSendMessage(text=RULES))
-            multimessage.append(TemplateSendMessage(
-                alt_text='同意我們的同意事項?',
-                template=ConfirmTemplate(
-                    text='你是否同意我們的同意事項?',
-                    actions=[
-                        MessageTemplateAction(
-                            label='我同意',
-                            text='/service/1'
-                        ),
-                        MessageTemplateAction(
-                            label='我不同意',
-                            text='/service/0'
-                        )
-                    ]
-                )
-            ))
-    if len(multimessage) > 0 and len(multimessage) < 6:
-        line_bot_api.reply_message(event.reply_token, multimessage)
-
-
-@handler.add(MessageEvent, message=LocationMessage)
-def handle_location_message(event):
-    connection = pymysql.connect(
-        host="us-cdbr-east-05.cleardb.net",
-        user="b5f2e205874506",
-        password="3291697e",
-        db="heroku_b2cccf87a825db4",
-        charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    user_id = event.source.user_id
-    multimessage = []
-    is_exist = CheckUserExistance(connection, user_id)
-    if not is_exist:
-        multimessage.append(TextSendMessage(text='你目前不再資料庫中，現在將立即為你新增'))
-        AddUserInfo(connection, user_id)
-    is_agree = GetUserInfo(connection, user_id, 'service')
-    if is_agree == 0:
-        multimessage.append(TextSendMessage(text="你尚未同意我們的使用條款，請先同意我們的條款\n條款網址如下"))  # noqa: E501
-        multimessage.append(TextSendMessage(text=RULES))
-        multimessage.append(TemplateSendMessage(
-            alt_text='同意使用條款?',
-            template=ConfirmTemplate(
-                text='你是否同意我們的使用條款?',
-                actions=[
-                    MessageTemplateAction(
-                        label='我同意',
-                        text='/service/1'
-                    ),
-                    MessageTemplateAction(
-                        label='我不同意',
-                        text='/service/0'
-                    )
-                ]
-            )
-        ))
-    else:
-        latitude = event.message.latitude
-        longitude = event.message.longitude
-        latlong = f'{latitude},{longitude}'
-        UpdateUserInfo(connection, user_id, 'latlong', latlong)
-        label_lst = ['全部', '餐廳', '加油站', '旅館', '景點', '便利商店']
-        text_lst = ['/find/all', '/find/restaurant', '/find/gas_station', '/find/lodging', '/find/tourist_attraction', '/find/convenience_store']  # noqa: E501
-        items = make_quick_reply_item_lst(label_lst, text_lst)
-        multimessage.append(
-            TextSendMessage(
-                text='請問你要搜尋附近的甚麼項目?',
-                quick_reply=QuickReply(items=items)
-            )
-        )
-    line_bot_api.reply_message(event.reply_token, multimessage)
-
-
-@handler.add(PostbackEvent)
-def handle_postback_message(event):
-    connection = pymysql.connect(
-        host="us-cdbr-east-05.cleardb.net",
-        user="b5f2e205874506",
-        password="3291697e",
-        db="heroku_b2cccf87a825db4",
-        charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    edata = event.postback.data
-    multimessage = []
-    user_id = event.source.user_id
-    print(edata)
-    is_exist = CheckUserExistance(connection, user_id)
-    if not is_exist:
-        AddUserInfo(connection, user_id)
-    is_agree = GetUserInfo(connection, user_id, 'service')
-    if is_agree == 0:
-        if edata.startswith('/service'):
-            proetext = edata.split('/')
-            proetext = proetext[2]
-            if proetext == '1':
-                UpdateUserInfo(connection, user_id, 'service', 1)
-                multimessage.append(TextSendMessage(text='OK，你現在可以開始使用Travel Bot 的所有功能'))  # noqa: E501
-            else:
-                multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))  # noqa: E501
-        else:
-            multimessage.append(TextSendMessage(text="你尚未同意我們的個人資料告知事項及同意事項(以下簡稱同意事項)，請先同意我們的同意事項\n條款如下"))  # noqa: E501
-            multimessage.append(TextSendMessage(text=RULES))
+    if etext == '開始我的Travel Bot美好體驗':
+        is_agree = GetUserInfo(connection, user_id, 'service')
+        if is_agree == 0:
+            multimessage.append(TextSendMessage(text="你尚未同意我們的個人資料告知事項及同意事項以及使用條款(以下簡稱事項及條款)，請先同意我們的事項及條款。完整事項及條款可至下方選單連結查看"))  # noqa: E501
             multimessage.append(TemplateSendMessage(
                 alt_text='同意我們的同意事項?',
                 template=ConfirmTemplate(
@@ -198,34 +86,107 @@ def handle_postback_message(event):
                     ]
                 )
             ))
+        else:
+            multimessage.append(TextSendMessage(text='你已經完成基本設定了'))
+    if len(multimessage) > 0 and len(multimessage) < 6:
+        line_bot_api.reply_message(event.reply_token, multimessage)
+
+
+@handler.add(MessageEvent, message=LocationMessage)
+def handle_location_message(event):
+    connection = pymysql.connect(
+        host="us-cdbr-east-05.cleardb.net",
+        user="b5f2e205874506",
+        password="3291697e",
+        db="heroku_b2cccf87a825db4",
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    user_id = event.source.user_id
+    is_exist = CheckUserExistance(connection, user_id)
+    user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
+    multimessage = []
+    if not is_exist:
+        if user_rich != default_richmenu_id:
+            line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)
+        multimessage.append(TextSendMessage(text='請先完成基本設定'))
     else:
-        latlong = GetUserInfo(connection, user_id, 'latlong')
-        if edata == '如何分享位置':
-            multimessage.append(TextSendMessage(text='請觀看影片'))
-            multimessage.append(TextSendMessage(text='shorturl.at/AT579'))
-        if latlong != 'None':
-            if edata.startswith('/find'):
+        is_agree = GetUserInfo(connection, user_id, 'service')
+        if is_agree == 0:
+            multimessage.append(TextSendMessage(text='請先完成基本設定'))
+        else:
+            latitude = event.message.latitude
+            longitude = event.message.longitude
+            latlong = f'{latitude},{longitude}'
+            UpdateUserInfo(connection, user_id, 'latlong', latlong)
+            line_bot_api.link_rich_menu_to_user(user_id, fgfg)
+    if len(multimessage) > 0 and len(multimessage) < 6:
+        line_bot_api.reply_message(event.reply_token, multimessage)
+
+
+@handler.add(PostbackEvent)
+def handle_postback_message(event):
+    connection = pymysql.connect(
+        host="us-cdbr-east-05.cleardb.net",
+        user="b5f2e205874506",
+        password="3291697e",
+        db="heroku_b2cccf87a825db4",
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    edata = event.postback.data
+    multimessage = []
+    user_id = event.source.user_id
+    is_exist = CheckUserExistance(connection, user_id)
+    user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
+    if not is_exist:
+        multimessage.append(TextSendMessage(text='請先完成基本設定'))
+        if user_rich != default_richmenu_id:
+            line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)
+    else:
+        is_agree = GetUserInfo(connection, user_id, 'service')
+        if is_agree == 0:
+            if edata.startswith('/service'):
                 proetext = edata.split('/')
                 proetext = proetext[2]
-                nearby_places = find_nearby_places(catagory=proetext, rankby=RANKBY_DICT[proetext], latlong=latlong)  # noqa: E501
-                if type(nearby_places) == pd.core.frame.DataFrame:
-                    columns = make_nearby_carousel_template_column(nearby_places)  # noqa: E501
-                    if columns != 'ERROR_OCCURED':
-                        multimessage.append(make_nearby_carousel_template(proetext, columns))  # noqa: E501
-                    else:
-                        multimessage.append(TextSendMessage(text='發生錯誤'))
-            if edata.startswith('/detail'):
-                print('yes')
-                information = edata.split('/')[2]
-                placeID = information.split('(')[0]
-                place_name = information.split('(')[1].split(')')[0]
-                detail = find_place_details(placeID)
-                bubble = make_bubble_component(place_name, detail)
-                multimessage.append(FlexSendMessage(alt_text='彈性配置', contents=bubble))  # noqa: E501
+                if proetext == '1':
+                    UpdateUserInfo(connection, user_id, 'service', 1)
+                    multimessage.append(TextSendMessage(text='OK，你現在可以開始使用Travel Bot 的所有功能'))  # noqa: E501
+                    line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
+                else:
+                    multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))  # noqa: E501
+            else:
+                if user_rich != default_richmenu_id:
+                    line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)  # noqa: E501
+                multimessage.append(TextSendMessage(text='請先完成基本設定'))
         else:
-            multimessage.append(TextSendMessage(text='你尚未提供你的位置'))
-    have_location = True if latlong != 'None' else False
-    rich_menu_switch(line_bot_api, GetUserInfo(connection, user_id, 'latlong'), have_location)  # noqa: E501
+            latlong = GetUserInfo(connection, user_id, 'latlong')
+            if edata == '如何分享位置':
+                multimessage.append(TextSendMessage(text='請觀看影片'))
+                multimessage.append(TextSendMessage(text='shorturl.at/AT579'))
+            if latlong != 'None':
+                if edata.startswith('/find'):
+                    proetext = edata.split('/')
+                    proetext = proetext[2]
+                    nearby_places = find_nearby_places(catagory=proetext, rankby=RANKBY_DICT[proetext], latlong=latlong)  # noqa: E501
+                    if type(nearby_places) == pd.core.frame.DataFrame:
+                        columns = make_nearby_carousel_template_column(nearby_places)  # noqa: E501
+                        if columns != 'ERROR_OCCURED':
+                            multimessage.append(make_nearby_carousel_template(proetext, columns))  # noqa: E501
+                        else:
+                            multimessage.append(TextSendMessage(text='發生錯誤'))
+                if edata.startswith('/detail'):
+                    print('yes')
+                    information = edata.split('/')[2]
+                    placeID = information.split('(')[0]
+                    place_name = information.split('(')[1].split(')')[0]
+                    detail = find_place_details(placeID)
+                    bubble = make_bubble_component(place_name, detail)
+                    multimessage.append(FlexSendMessage(alt_text='彈性配置', contents=bubble))  # noqa: E501
+            else:
+                multimessage.append(TextSendMessage(text='你尚未提供你的位置'))
+                if user_rich != no_location_richmenu_id:
+                    line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 
