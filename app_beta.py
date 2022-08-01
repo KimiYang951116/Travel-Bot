@@ -189,9 +189,9 @@ def handle_postback_message(event):
                     bubble = make_bubble_component(place_name, detail)
                     multimessage.append(FlexSendMessage(alt_text='彈性配置', contents=bubble))  # noqa: E501
                 elif edata == '/see_location':
-                    latitude = latlong.split(',')[1]
-                    longitude = latlong.split(',')[0]
-                    multimessage.append(LocationSendMessage(title='你的位置', latitude=latitude, longitude=longitude))
+                    latitude = latlong.split(',')[0]
+                    longitude = latlong.split(',')[1]
+                    multimessage.append(LocationSendMessage(title='你的位置', address='你向Travel Bot所提供的位置', latitude=latitude, longitude=longitude))
             else:
                 multimessage.append(TextSendMessage(text='你尚未提供你的位置'))
                 if user_rich != no_location_richmenu_id:
