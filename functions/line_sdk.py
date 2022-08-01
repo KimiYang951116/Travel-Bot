@@ -4,7 +4,6 @@ from linebot.models import (
     TemplateSendMessage,
     CarouselTemplate,
     CarouselColumn,
-    MessageTemplateAction,
     PostbackTemplateAction,
     QuickReplyButton,
     PostbackAction,
@@ -120,7 +119,7 @@ def make_bubble_component(place_name, detail_lst):
                     layout='baseline',
                     contents=[
                         IconComponent(
-                            url='https://cdn-icons-png.flaticon.com/512/217/217887.png',    # noqa: E501
+                            url='https://cdn-icons-png.flaticon.com/512/217/217887.png',  # noqa: E501
                             size='lg'
                         ),
                         TextComponent(

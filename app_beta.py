@@ -8,7 +8,6 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import (
     ConfirmTemplate,
-    PostbackTemplateAction,
     FlexSendMessage,
     MessageEvent,
     TextMessage,
@@ -16,6 +15,8 @@ from linebot.models import (
     TextSendMessage,
     TemplateSendMessage,
     PostbackEvent,
+    LocationSendMessage,
+    MessageTemplateAction
 )
 from linebot.models import *  # noqa: F401, F403
 
@@ -79,17 +80,30 @@ def handle_text_message(event):
                 template=ConfirmTemplate(
                     text='你是否同意我們的同意事項?',
                     actions=[
-                        PostbackTemplateAction(
+                        MessageTemplateAction(
                             label='我同意',
-                            data='/service/1'
+                            text='/service/1'
                         ),
-                        PostbackTemplateAction(
+                        MessageTemplateAction(
                             label='我不同意',
-                            data='/service/0'
+                            text='/service/0'
                         )
                     ]
                 )
             ))
+        else:
+            multimessage.append(TextSendMessage(text='你已經完成基本設定了'))
+    elif etext.startswith('/service'):
+        is_agree = GetUserInfo(connection, user_id, 'service')
+        if is_agree == 0:
+            proetext = etext.split('/')
+            proetext = proetext[2]
+            if proetext == '1':
+                UpdateUserInfo(connection, user_id, 'service', 1)
+                multimessage.append(TextSendMessage(text='OK，你現在可以開始使用Travel Bot 的所有功能'))  # noqa: E501
+                line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
+            else:
+                multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))  # noqa: E501
         else:
             multimessage.append(TextSendMessage(text='你已經完成基本設定了'))
     if etext == '測試':
@@ -112,8 +126,8 @@ def handle_location_message(event):
     is_exist = CheckUserExistance(connection, user_id)
     try:
         user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
-    except:
-        line_bot_api.set_default_rich_menu(default_richmenu_id)
+    except Exception:
+        line_bot_api.link_rich_menu_to_user(default_richmenu_id)
     multimessage = []
     if not is_exist:
         if user_rich != default_richmenu_id:
@@ -128,7 +142,7 @@ def handle_location_message(event):
             longitude = event.message.longitude
             latlong = f'{latitude},{longitude}'
             UpdateUserInfo(connection, user_id, 'latlong', latlong)
-            line_bot_api.link_rich_menu_to_user(user_id, choose_catagory_richmenu_id)
+            line_bot_api.link_rich_menu_to_user(user_id, choose_catagory_richmenu_id)    # noqa: E501
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 
@@ -149,8 +163,8 @@ def handle_postback_message(event):
     is_exist = CheckUserExistance(connection, user_id)
     try:
         user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
-    except:
-        line_bot_api.set_default_rich_menu(default_richmenu_id)
+    except Exception:
+        line_bot_api.link_rich_menu_to_user(default_richmenu_id)
     if not is_exist:
         multimessage.append(TextSendMessage(text='請先完成基本設定'))
         if user_rich != default_richmenu_id:
@@ -158,19 +172,9 @@ def handle_postback_message(event):
     else:
         is_agree = GetUserInfo(connection, user_id, 'service')
         if is_agree == 0:
-            if edata.startswith('/service'):
-                proetext = edata.split('/')
-                proetext = proetext[2]
-                if proetext == '1':
-                    UpdateUserInfo(connection, user_id, 'service', 1)
-                    multimessage.append(TextSendMessage(text='OK，你現在可以開始使用Travel Bot 的所有功能'))  # noqa: E501
-                    line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
-                else:
-                    multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))  # noqa: E501
-            else:
-                if user_rich != default_richmenu_id:
-                    line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)  # noqa: E501
-                multimessage.append(TextSendMessage(text='請先完成基本設定'))
+            if user_rich != default_richmenu_id:
+                line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)  # noqa: E501
+            multimessage.append(TextSendMessage(text='請先完成基本設定'))
         else:
             latlong = GetUserInfo(connection, user_id, 'latlong')
             if edata == '如何分享位置':
@@ -197,7 +201,7 @@ def handle_postback_message(event):
                 elif edata == '/see_location':
                     latitude = latlong.split(',')[0]
                     longitude = latlong.split(',')[1]
-                    multimessage.append(LocationSendMessage(title='你的位置', address='你向Travel Bot所提供的位置', latitude=latitude, longitude=longitude))
+                    multimessage.append(LocationSendMessage(title='你的位置', address='你向Travel Bot所提供的位置', latitude=latitude, longitude=longitude))    # noqa: E501
             else:
                 multimessage.append(TextSendMessage(text='你尚未提供你的位置'))
                 if user_rich != no_location_richmenu_id:
