@@ -10,12 +10,10 @@ from linebot.models import (
     ConfirmTemplate,
     PostbackTemplateAction,
     FlexSendMessage,
-    MessageTemplateAction,
     MessageEvent,
     TextMessage,
     LocationMessage,
     TextSendMessage,
-    QuickReply,
     TemplateSendMessage,
     PostbackEvent,
 )
@@ -29,10 +27,15 @@ from functions.line_sdk import (
     make_bubble_component,
     make_nearby_carousel_template,
     make_nearby_carousel_template_column,
-    make_quick_reply_item_lst,
-    rich_menu_switch
 )
-from config import LINE_API_KEY, RANKBY_DICT, WEBHOOK_HANDLER, no_location_richmenu_id, default_richmenu_id
+from config import (
+    LINE_API_KEY,
+    RANKBY_DICT,
+    WEBHOOK_HANDLER,
+    no_location_richmenu_id,
+    default_richmenu_id,
+    choose_catagory_richmenu_id
+)
 
 line_bot_api = LineBotApi(LINE_API_KEY)
 handler = WebhookHandler(WEBHOOK_HANDLER)
@@ -69,6 +72,7 @@ def handle_text_message(event):
     if etext == '開始我的Travel Bot美好體驗':
         is_agree = GetUserInfo(connection, user_id, 'service')
         if is_agree == 0:
+            multimessage.append(TextSendMessage(text="歡迎使用Travel Bot"))
             multimessage.append(TextSendMessage(text="你尚未同意我們的個人資料告知事項及同意事項以及使用條款(以下簡稱事項及條款)，請先同意我們的事項及條款。完整事項及條款可至下方選單連結查看"))  # noqa: E501
             multimessage.append(TemplateSendMessage(
                 alt_text='同意我們的同意事項?',
@@ -88,6 +92,8 @@ def handle_text_message(event):
             ))
         else:
             multimessage.append(TextSendMessage(text='你已經完成基本設定了'))
+    if etext == '測試':
+        multimessage.append(TextSendMessage(text=user_id))
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 
@@ -119,7 +125,7 @@ def handle_location_message(event):
             longitude = event.message.longitude
             latlong = f'{latitude},{longitude}'
             UpdateUserInfo(connection, user_id, 'latlong', latlong)
-            line_bot_api.link_rich_menu_to_user(user_id, fgfg)
+            line_bot_api.link_rich_menu_to_user(user_id, choose_catagory_richmenu_id)
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 
@@ -175,18 +181,21 @@ def handle_postback_message(event):
                             multimessage.append(make_nearby_carousel_template(proetext, columns))  # noqa: E501
                         else:
                             multimessage.append(TextSendMessage(text='發生錯誤'))
-                if edata.startswith('/detail'):
-                    print('yes')
+                elif edata.startswith('/detail'):
                     information = edata.split('/')[2]
                     placeID = information.split('(')[0]
                     place_name = information.split('(')[1].split(')')[0]
                     detail = find_place_details(placeID)
                     bubble = make_bubble_component(place_name, detail)
                     multimessage.append(FlexSendMessage(alt_text='彈性配置', contents=bubble))  # noqa: E501
+                elif edata == '/see_location':
+                    latitude = latlong.split(',')[1]
+                    longitude = latlong.split(',')[0]
+                    multimessage.append(LocationSendMessage(title='你的位置', latitude=latitude, longitude=longitude))
             else:
                 multimessage.append(TextSendMessage(text='你尚未提供你的位置'))
                 if user_rich != no_location_richmenu_id:
-                    line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)
+                    line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
     if len(multimessage) > 0 and len(multimessage) < 6:
         line_bot_api.reply_message(event.reply_token, multimessage)
 

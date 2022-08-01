@@ -28,3 +28,4 @@ RANKBY_DICT = {
 }
 default_richmenu_id = 'richmenu-338c645051065cceebc3b1c65ffc7b1b'
 no_location_richmenu_id = 'richmenu-818171f764b0fdb76d8e4d896ee3efa0'
+choose_catagory_richmenu_id = 'richmenu-d066fd9f8ab16847ad0638f140cf21f8'

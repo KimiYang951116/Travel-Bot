@@ -1,4 +1,4 @@
-from ..config import LINE_API_KEY
+from config import LINE_API_KEY
 from linebot import LineBotApi
 from linebot.models import *  # noqa: F401, F403
 from linebot.models import (

@@ -1,4 +1,4 @@
-from travel_bot.config import LINE_API_KEY
+from config import LINE_API_KEY
 from linebot import LineBotApi
 from linebot.models import *  # noqa: F403, F401
 from linebot.models import (
