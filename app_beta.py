@@ -110,7 +110,10 @@ def handle_location_message(event):
     )
     user_id = event.source.user_id
     is_exist = CheckUserExistance(connection, user_id)
-    user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
+    try:
+        user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
+    except:
+        line_bot_api.set_default_rich_menu(default_richmenu_id)
     multimessage = []
     if not is_exist:
         if user_rich != default_richmenu_id:
@@ -144,7 +147,10 @@ def handle_postback_message(event):
     multimessage = []
     user_id = event.source.user_id
     is_exist = CheckUserExistance(connection, user_id)
-    user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
+    try:
+        user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
+    except:
+        line_bot_api.set_default_rich_menu(default_richmenu_id)
     if not is_exist:
         multimessage.append(TextSendMessage(text='請先完成基本設定'))
         if user_rich != default_richmenu_id:
