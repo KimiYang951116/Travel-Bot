@@ -34,6 +34,8 @@ def find_nearby_places(catagory, latlong, rankby='distance', api_key=GOOGLE_MAPS
     ZERO_RESULTS : no results found nearby
     INVALID_REQUEST : an error occured when finding
     '''
+    if catagory == 'all':
+        catagory = ''
     if rankby == 'distance':
         url = f'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latlong}&key={api_key}&opennow&language=zh-TW&type={catagory}&rankby=distance'  # noqa: E501
     else:

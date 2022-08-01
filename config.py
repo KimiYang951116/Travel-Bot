@@ -24,7 +24,8 @@ RANKBY_DICT = {
     'gas_station': 'distance',
     'lodging': 'prominence',
     'tourist_attraction': 'prominence',
-    'convenience_store': 'distance'
+    'convenience_store': 'distance',
+    'all' : 'prominence'
 }
 default_richmenu_id = 'richmenu-338c645051065cceebc3b1c65ffc7b1b'
 no_location_richmenu_id = 'richmenu-818171f764b0fdb76d8e4d896ee3efa0'
