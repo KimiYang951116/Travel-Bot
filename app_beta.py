@@ -161,6 +161,7 @@ def handle_postback_message(event):
         cursorclass=pymysql.cursors.DictCursor
     )
     edata = event.postback.data
+    print(edata)
     multimessage = []
     user_id = event.source.user_id
     is_exist = CheckUserExistance(connection, user_id)
