@@ -11,4 +11,4 @@ RANKBY_DICT = {
 }
 default_richmenu_id = 'richmenu-112595219b475989a0b0177473ffa70b'  # 'richmenu-338c645051065cceebc3b1c65ffc7b1b'  # noqa: E501
 no_location_richmenu_id = 'richmenu-818171f764b0fdb76d8e4d896ee3efa0'
-choose_catagory_richmenu_id = 'richmenu-d066fd9f8ab16847ad0638f140cf21f8'
+choose_catagory_richmenu_id = 'richmenu-391c55557497b3067bad78a6499cd2fc'  # 'richmenu-d066fd9f8ab16847ad0638f140cf21f8'  # noqa: E501
