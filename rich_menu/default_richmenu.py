@@ -28,11 +28,11 @@ rich_menu_to_create = RichMenu(
         ),
         RichMenuArea(
             bounds=RichMenuBounds(x=0, y=705, width=557, height=692),
-            action=URIAction(label='使用條款', uri='https://www.google.com/')
+            action=URIAction(label='使用條款', uri='https://line.me/R/home/public/post?id=256mlmxi&postId=1165957509166203949')  # noqa: E501
         ),
         RichMenuArea(
             bounds=RichMenuBounds(x=1891, y=705, width=609, height=692),
-            action=URIAction(label='個資聲明', uri='https://www.google.com/')
+            action=URIAction(label='個資聲明', uri='https://line.me/R/home/public/post?id=256mlmxi&postId=1165925199351081311')  # noqa: E501
         ),
         RichMenuArea(
             bounds=RichMenuBounds(x=0, y=1397, width=2500, height=289),

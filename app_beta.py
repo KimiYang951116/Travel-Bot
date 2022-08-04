@@ -106,6 +106,7 @@ def handle_text_message(event):
                 multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))  # noqa: E501
         else:
             multimessage.append(TextSendMessage(text='你已經完成基本設定了'))
+            line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
     if etext == '測試':
         multimessage.append(TextSendMessage(text=user_id))
     if len(multimessage) > 0 and len(multimessage) < 6:
@@ -180,7 +181,7 @@ def handle_postback_message(event):
             if edata == '如何分享位置':
                 multimessage.append(TextSendMessage(text='請觀看影片'))
                 multimessage.append(TextSendMessage(text='shorturl.at/AT579'))
-            if latlong != 'None':
+            elif latlong != 'None':
                 if edata.startswith('/find'):
                     proetext = edata.split('/')
                     proetext = proetext[2]
@@ -202,6 +203,8 @@ def handle_postback_message(event):
                     latitude = latlong.split(',')[0]
                     longitude = latlong.split(',')[1]
                     multimessage.append(LocationSendMessage(title='你的位置', address='你向Travel Bot所提供的位置', latitude=latitude, longitude=longitude))    # noqa: E501
+                elif edata == '/rechoose_location':
+                    line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
             else:
                 multimessage.append(TextSendMessage(text='你尚未提供你的位置'))
                 if user_rich != no_location_richmenu_id:

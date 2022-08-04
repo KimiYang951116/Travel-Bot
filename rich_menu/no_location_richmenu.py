@@ -28,7 +28,7 @@ rich_menu_to_create = RichMenu(
         ),
         RichMenuArea(
             bounds=RichMenuBounds(x=1949, y=937, width=551, height=749),
-            action=URIAction(label='如何提供', uri='https://www.google.com/')
+            action=URIAction(label='如何提供', uri='https://line.me/R/home/public/post?id=256mlmxi&postId=1165897493538960296')  # noqa: E501
         ),
     ]
 )
