@@ -137,6 +137,8 @@ def handle_location_message(event):
     else:
         is_agree = GetUserInfo(connection, user_id, 'service')
         if is_agree == 0:
+            if user_rich != default_richmenu_id:
+                line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)
             multimessage.append(TextSendMessage(text='請先完成基本設定'))
         else:
             latitude = event.message.latitude
