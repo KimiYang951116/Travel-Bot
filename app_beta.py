@@ -66,6 +66,11 @@ def handle_text_message(event):
     )
     etext = event.message.text
     user_id = event.source.user_id
+    try:
+        user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
+    except Exception:
+        line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)
+        user_rich = default_richmenu_id
     multimessage = []
     is_exist = CheckUserExistance(connection, user_id)
     if not is_exist:
@@ -93,6 +98,8 @@ def handle_text_message(event):
             ))
         else:
             multimessage.append(TextSendMessage(text='你已經完成基本設定了'))
+            if user_rich != no_location_richmenu_id and user_rich != choose_catagory_richmenu_id:  # noqa: E501
+                line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
     elif etext.startswith('/service'):
         is_agree = GetUserInfo(connection, user_id, 'service')
         if is_agree == 0:
@@ -129,6 +136,7 @@ def handle_location_message(event):
         user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
     except Exception:
         line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)
+        user_rich = default_richmenu_id
     multimessage = []
     if not is_exist:
         if user_rich != default_richmenu_id:
@@ -138,7 +146,7 @@ def handle_location_message(event):
         is_agree = GetUserInfo(connection, user_id, 'service')
         if is_agree == 0:
             if user_rich != default_richmenu_id:
-                line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)
+                line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)  # noqa: E501
             multimessage.append(TextSendMessage(text='請先完成基本設定'))
         else:
             latitude = event.message.latitude
@@ -169,6 +177,7 @@ def handle_postback_message(event):
         user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
     except Exception:
         line_bot_api.link_rich_menu_to_user(default_richmenu_id)
+        user_rich = default_richmenu_id
     if not is_exist:
         multimessage.append(TextSendMessage(text='請先完成基本設定'))
         if user_rich != default_richmenu_id:
