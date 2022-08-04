@@ -128,7 +128,7 @@ def handle_location_message(event):
     try:
         user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
     except Exception:
-        line_bot_api.link_rich_menu_to_user(default_richmenu_id)
+        line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)
     multimessage = []
     if not is_exist:
         if user_rich != default_richmenu_id:
