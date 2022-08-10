@@ -15,7 +15,7 @@ from linebot.models import (
     URIAction
 )
 
-from functions.find_places import generate_guild_link
+from functions.find_places import calculate_distance, generate_guild_link
 
 
 def make_nearby_carousel_template(catagory, column):
@@ -45,7 +45,7 @@ def make_nearby_carousel_template(catagory, column):
         return 'ERROR_OCCURED'
 
 
-def make_nearby_carousel_template_column(nearby_place_df):
+def make_nearby_carousel_template_column(nearby_place_df, s_latlong):
     '''
     The function takes a dataframe returned by find_nearby_places and outputs
     a list of
@@ -75,9 +75,10 @@ def make_nearby_carousel_template_column(nearby_place_df):
             if len(text) > 60:
                 text = text[:60]
             print(f'{title}\n{text}')
+            distance = calculate_distance(s_latlong, nearby_place_df[i][4])
             column.append(CarouselColumn(
                 title=title,
-                text=text+f'\n{nearby_place_df[i][4]}',
+                text=text+f'\n{distance}公里(直線距離)',
                 actions=[
                     PostbackTemplateAction(label='查看詳細資料', data=f'/detail/{nearby_place_df[i][2]}({nearby_place_df[i][0]})')    # noqa: E501
                 ]
