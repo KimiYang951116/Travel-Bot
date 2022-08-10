@@ -52,8 +52,8 @@ def find_nearby_places(catagory, latlong, rankby='distance', api_key=GOOGLE_MAPS
             name = response['results'][i]['name']
             vicinity = response['results'][i]['vicinity']
             placeID = response['results'][i]['place_id']
-            lat = response['result']['geometry']['location']['lat']
-            long = response['result']['geometry']['location']['lng']
+            lat = response['results'][i]['geometry']['location']['lat']
+            long = response['results'][i]['geometry']['location']['lng']
             latlong = f'{lat},{long}'
             try:
                 photoID = response['results'][i]['photos'][0]['photo_reference']  # noqa: E501
