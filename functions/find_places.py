@@ -47,10 +47,14 @@ def find_nearby_places(catagory, latlong, rankby='distance', api_key=GOOGLE_MAPS
         vicinities = []
         placeIDs = []
         photoIDs = []
+        latlongs = []
         for i in range(len(response['results'])):
             name = response['results'][i]['name']
             vicinity = response['results'][i]['vicinity']
             placeID = response['results'][i]['place_id']
+            lat = response['result']['geometry']['location']['lat']
+            long = response['result']['geometry']['location']['lng']
+            latlong = f'{lat},{long}'
             try:
                 photoID = response['results'][i]['photos'][0]['photo_reference']  # noqa: E501
             except Exception:
@@ -59,9 +63,10 @@ def find_nearby_places(catagory, latlong, rankby='distance', api_key=GOOGLE_MAPS
             vicinities.append(vicinity)
             placeIDs.append(placeID)
             photoIDs.append(photoID)
+            latlongs.append(latlong)
             df = pd.DataFrame(
-                [names, vicinities, placeIDs, photoIDs],
-                index=['name', 'vincinity', 'place_id', 'photo_reference']
+                [names, vicinities, placeIDs, photoIDs, latlongs],
+                index=['name', 'vincinity', 'place_id', 'photo_reference', 'latlong']
             )
         return df
     else:

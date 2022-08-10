@@ -77,7 +77,7 @@ def make_nearby_carousel_template_column(nearby_place_df):
             print(f'{title}\n{text}')
             column.append(CarouselColumn(
                 title=title,
-                text=text,
+                text=text+f'\n{nearby_place_df[i][4]}',
                 actions=[
                     PostbackTemplateAction(label='查看詳細資料', data=f'/detail/{nearby_place_df[i][2]}({nearby_place_df[i][0]})')    # noqa: E501
                 ]
