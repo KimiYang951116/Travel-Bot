@@ -209,7 +209,7 @@ def handle_postback_message(event):
                     placeID = information.split('(')[0]
                     place_name = information.split('(')[1].split(')')[0]
                     detail = find_place_details(placeID)
-                    bubble = make_bubble_component(place_name, detail)
+                    bubble = make_bubble_component(place_name, detail, latlong)
                     multimessage.append(FlexSendMessage(alt_text='彈性配置', contents=bubble))  # noqa: E501
                 elif edata == '/see_location':
                     latitude = latlong.split(',')[0]

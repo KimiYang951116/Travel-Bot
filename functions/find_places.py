@@ -2,6 +2,7 @@
 import requests
 import pandas as pd
 import time
+from math import radians, cos, sin, asin, sqrt
 
 # my module
 from config import GOOGLE_MAPS_API_KEY
@@ -74,9 +75,33 @@ def find_place_details(placeId, api_key=GOOGLE_MAPS_API_KEY):
     openhr = response['result'].get('opening_hours', '無法取得營業時間')['weekday_text'][loc_time.tm_wday]  # noqa: E501
     address = response['result'].get('formatted_address', '無法取得地址')
     phone = response['result'].get('formatted_phone_number', '無法取得電話')
+    lat = response['result']['geometry']['location']['lat']
+    long = response['result']['geometry']['location']['long']
     if phone != '無法取得電話':
         phone = phone.replace(' ', '')
     rate = response['result'].get('rating', '無法取得評分')
     price = response['result'].get('price_level', '無法取得價錢')
-    result = [openhr, address, phone, rate, price]
+    latlong = f'{lat},{long}'
+    result = [openhr, address, phone, rate, price, latlong]
     return result
+
+
+def generate_guild_link(start_latlong, dest_latlong):
+    link = f'https://www.google.com/maps/dir/{start_latlong}/{dest_latlong}'
+    return link
+
+
+def calculate_distance(s_latlong, d_latlong):
+    start_lat = float(s_latlong.split(',')[0])
+    start_long = float(s_latlong.split(',')[1])
+    dest_lat = float(d_latlong.split(',')[0])
+    dest_long = float(d_latlong.split(',')[1])
+    start_lat, start_long, dest_lat, dest_long = map(radians, [start_lat, start_long, dest_lat, dest_long])  # noqa: E501
+    # 半正矢公式
+    dlon = start_long - dest_long
+    dlat = start_lat - dest_lat
+    a = sin(dlat/2)**2 + cos(start_lat) * cos(dest_lat) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a))
+    r = 6371
+    dis = round((c * r * 1000)/1000, 2)
+    return dis
