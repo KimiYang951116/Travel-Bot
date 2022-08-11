@@ -102,8 +102,8 @@ def make_quick_reply_item_lst(label_lst, text_lst):
 
 
 def make_bubble_component(place_name, detail_lst, now_latlong):
-    print(f'https://maps.googleapis.com/maps/api/place/photo?photo_reference={photo}&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE')
     openhr, address, phone, rate, price, latlong, photo = detail_lst[0], detail_lst[1], detail_lst[2], detail_lst[3], detail_lst[4], detail_lst[5], detail_lst[6]  # noqa: E501
+    print(f'https://maps.googleapis.com/maps/api/place/photo?photo_reference={photo}&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE')
     link = generate_guild_link(now_latlong, latlong)
     bubble = BubbleContainer(
         direction='ltr',
