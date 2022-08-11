@@ -113,7 +113,7 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
                 TextComponent(
                     text=place_name,
                     weight='bold',
-                    size='20px',
+                    size='28px',
                 ),
             ]
         ),
