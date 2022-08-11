@@ -189,7 +189,8 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
                     margin='xxl',
                     contents=[
                         ButtonComponent(
-                            color='#FFC849',
+                            style='primary',
+                            color = '#FFC849'
                             height='sm',
                             action=URIAction(label='電話聯絡', uri=f'tel:{phone}'),
                         ),
