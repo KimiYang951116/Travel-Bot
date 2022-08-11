@@ -106,6 +106,7 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
     openhr, address, phone, rate, price, latlong, photo = detail_lst[0], detail_lst[1], detail_lst[2], detail_lst[3], detail_lst[4], detail_lst[5], detail_lst[6]  # noqa: E501
     link = generate_guild_link(now_latlong, latlong)
     address_content = []
+    # address_content.append(IconComponent(url='https://cdn-icons-png.flaticon.com/512/235/235861.png',size='lg'))
     times = len(address) // 15 + 1
     for i in range(1, times+1):
         if i != times:
@@ -146,19 +147,7 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
                 ),
                 BoxComponent(
                     layout='baseline',
-                    contents=[
-                        BoxComponent(
-                            layout='baseline',
-                            contents=IconComponent(
-                                url='https://cdn-icons-png.flaticon.com/512/235/235861.png', 
-                                size='lg' 
-                            )
-                        ),
-                        BoxComponent(
-                            layout='vertical',
-                            contents=address_content
-                        )
-                    ]
+                    contents=address_content
                 ),
                 BoxComponent(
                     layout='baseline',
