@@ -117,7 +117,7 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
             ]
         ),
         hero=ImageComponent(
-            url='https://lh3.googleusercontent.com/places/AKR5kUjXxfdeMfF2ruSfzcRicvWPZ66rOxRyV0pyrviII9QR09kiiQfYGsX2-he544eggPMJjT7v7QUbpeafaKv8ttOLfg38u2zmBFs=s1600-w400'
+            url='https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=Aap_uEA7vb0DDYVJWEaX3O-AtYp77AaswQKSGtDaimt3gt7QCNpdjp1BkdM6acJ96xTec3tsV_ZJNL_JP-lqsVxydG3nh739RE_hepOOL05tfJh2_ranjMadb3VoBYFvF0ma6S24qZ6QJUuV6sSRrhCskSBP5C1myCzsebztMfGvm7ij3gZT&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE'
         ),
         body=BoxComponent(
             layout='vertical',
