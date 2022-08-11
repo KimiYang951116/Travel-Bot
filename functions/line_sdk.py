@@ -113,8 +113,7 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
                 TextComponent(
                     text=place_name,
                     weight='bold',
-                    size='50px',
-                    adjustMode='shrink-to-fit'
+                    size='20px',
                 ),
             ]
         ),
@@ -199,7 +198,7 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
                             style='primary',
                             color='#748FFF',
                             height='sm',
-                            action=URIAction(label='路線', uri=link)
+                            action=URIAction(label='路線', uri=link),
                         )
                     ]
                 )
