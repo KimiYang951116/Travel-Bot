@@ -66,7 +66,7 @@ def find_nearby_places(catagory, latlong, rankby='distance', api_key=GOOGLE_MAPS
             latlongs.append(latlong)
             df = pd.DataFrame(
                 [names, vicinities, placeIDs, photoIDs, latlongs],
-                index=['name', 'vincinity', 'place_id', 'photo_reference', 'latlong']
+                index=['name', 'vincinity', 'place_id', 'photo_reference', 'latlong']  # noqa: E501
             )
         return df
     else:
@@ -74,35 +74,78 @@ def find_nearby_places(catagory, latlong, rankby='distance', api_key=GOOGLE_MAPS
 
 
 def find_place_details(placeId, api_key=GOOGLE_MAPS_API_KEY):
-    url = f'https://maps.googleapis.com/maps/api/place/details/json?place_id={placeId}&key={api_key}&language=zH-TW'  # noqa: E501
-    response = requests.request("GET", url).json()
-    loc_time = time.localtime()
-    openhr = response['result'].get('opening_hours', '無法取得營業時間')['weekday_text'][loc_time.tm_wday]  # noqa: E501
-    address = response['result'].get('formatted_address', '無法取得地址')
-    phone = response['result'].get('formatted_phone_number', '無法取得電話')
-    lat = response['result']['geometry']['location']['lat']
-    long = response['result']['geometry']['location']['lng']
-    if phone != '無法取得電話':
-        phone = phone.replace(' ', '')
-    rate = response['result'].get('rating', '無法取得評分')
-    price = response['result'].get('price_level', '無法取得價錢')
-    latlong = f'{lat},{long}'
-    result = [openhr, address, phone, rate, price, latlong]
-    return result
+    '''
+    The function takes a google map placeId and gives the detail of the place
+    it uses google maps api nearby search, for more details, see
+    https://developers.google.com/maps/documentation/places/web-service/details
+
+    parameters:
+    1.placeId : the placesId of the google maps api service
+    2.api_key : the google map api key that is used to find places nearby
+
+    return values :
+    1. normal : returns a list that contains the
+    openhours, address, telephone number, rate, price, latlong of the place
+    2. abnormal : returns the message ERROR
+    '''
+    try:
+        url = f'https://maps.googleapis.com/maps/api/place/details/json?place_id={placeId}&key={api_key}&language=zH-TW'  # noqa: E501
+        response = requests.request("GET", url).json()
+        loc_time = time.localtime()
+        openhr = response['result'].get('opening_hours', '無法取得營業時間')['weekday_text'][loc_time.tm_wday]  # noqa: E501
+        address = response['result'].get('formatted_address', '無法取得地址')
+        phone = response['result'].get('formatted_phone_number', '無法取得電話')
+        lat = response['result']['geometry']['location']['lat']
+        long = response['result']['geometry']['location']['lng']
+        if phone != '無法取得電話':
+            phone = phone.replace(' ', '')
+        rate = response['result'].get('rating', '無法取得評分')
+        price = response['result'].get('price_level', '無法取得價錢')
+        latlong = f'{lat},{long}'
+        result = [openhr, address, phone, rate, price, latlong]
+        return result
+    except Exception:
+        return 'ERROR'
 
 
 def generate_guild_link(start_latlong, dest_latlong):
+    '''
+    The function generates a link that can be directly
+    linked to the page that you can see the route to the destination 
+    latitude longitude
+    from the start latitude longitude
+
+    parameters:
+    1.start_latlong : the starting latitude and longitude
+    the format should be 'latitude,longitude'
+    2.dest_latlong : the destination latitude and longitude
+    the format should be 'latitude,longitude'
+
+    return values :
+    1. a google map link
+    '''
     link = f'https://www.google.com/maps/dir/{start_latlong}/{dest_latlong}'
     return link
 
 
 def calculate_distance(s_latlong, d_latlong):
+    '''
+    The function calculates the distance between two sets of latitudes
+    and longitudes
+
+    parameters:
+    s_latlong, d_latlong : the two sets of latitudes and longitudes
+    of their locations
+    you want to calculate the distance
+
+    return value:
+    1. the distance in km of how far the two locations are
+    '''
     start_lat = float(s_latlong.split(',')[0])
     start_long = float(s_latlong.split(',')[1])
     dest_lat = float(d_latlong.split(',')[0])
     dest_long = float(d_latlong.split(',')[1])
     start_lat, start_long, dest_lat, dest_long = map(radians, [start_lat, start_long, dest_lat, dest_long])  # noqa: E501
-    # 半正矢公式
     dlon = start_long - dest_long
     dlat = start_lat - dest_lat
     a = sin(dlat/2)**2 + cos(start_lat) * cos(dest_lat) * sin(dlon/2)**2
