@@ -12,7 +12,8 @@ from linebot.models import (
     IconComponent,
     BoxComponent,
     ButtonComponent,
-    URIAction
+    URIAction,
+    ImageComponent
 )
 
 from functions.find_places import calculate_distance, generate_guild_link
@@ -103,7 +104,6 @@ def make_quick_reply_item_lst(label_lst, text_lst):
 
 def make_bubble_component(place_name, detail_lst, now_latlong):
     openhr, address, phone, rate, price, latlong, photo = detail_lst[0], detail_lst[1], detail_lst[2], detail_lst[3], detail_lst[4], detail_lst[5], detail_lst[6]  # noqa: E501
-    print(f'https://lh3.googleusercontent.com/places/AKR5kUiLJfvy9Q_lJOmSt9D1M8gbhEzYLW2mRtRe8fMsBWvypmy1eXXhs3jMeqh1P4ubFtAqKqrG3XxbItsVe9umJR_O8z8SMmAgvw=s1600-w400')
     link = generate_guild_link(now_latlong, latlong)
     bubble = BubbleContainer(
         direction='ltr',
@@ -118,8 +118,8 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
             ]
         ),
         hero=ImageComponent(
-            url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE',
-            size = 'full'
+            url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE',  # noqa: E501
+            size='full'
         ),
         body=BoxComponent(
             layout='vertical',

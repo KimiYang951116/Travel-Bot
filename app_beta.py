@@ -95,8 +95,7 @@ def handle_text_message(event):
                         )
                     ]
                 )
-            )
-        )
+            ))
         else:
             multimessage.append(TextSendMessage(text='你已經完成基本設定了'))
             if user_rich != no_location_richmenu_id and user_rich != choose_catagory_richmenu_id:  # noqa: E501
@@ -114,7 +113,6 @@ def handle_text_message(event):
                 multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))  # noqa: E501
         else:
             multimessage.append(TextSendMessage(text='你已經完成基本設定了'))
-            multimessage.append(ImageSendMessage(original_content_url='https://lh3.googleusercontent.com/places/AKR5kUjXxfdeMfF2ruSfzcRicvWPZ66rOxRyV0pyrviII9QR09kiiQfYGsX2-he544eggPMJjT7v7QUbpeafaKv8ttOLfg38u2zmBFs=s1600-w400', preview_image_url='https://lh3.googleusercontent.com/places/AKR5kUjXxfdeMfF2ruSfzcRicvWPZ66rOxRyV0pyrviII9QR09kiiQfYGsX2-he544eggPMJjT7v7QUbpeafaKv8ttOLfg38u2zmBFs=s1600-w400'))
             line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
     if etext == '測試':
         multimessage.append(TextSendMessage(text=user_id))

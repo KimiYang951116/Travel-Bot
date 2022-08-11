@@ -112,7 +112,7 @@ def find_place_details(placeId, api_key=GOOGLE_MAPS_API_KEY):
 def generate_guild_link(start_latlong, dest_latlong):
     '''
     The function generates a link that can be directly
-    linked to the page that you can see the route to the destination 
+    linked to the page that you can see the route to the destination
     latitude longitude
     from the start latitude longitude
 
