@@ -117,8 +117,8 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
             ]
         ),
         hero=ImageComponent(
-            url = 'https://lh3.googleusercontent.com/places/AKR5kUjXxfdeMfF2ruSfzcRicvWPZ66rOxRyV0pyrviII9QR09kiiQfYGsX2-he544eggPMJjT7v7QUbpeafaKv8ttOLfg38u2zmBFs=s1600-w400'
-        )
+            url='https://lh3.googleusercontent.com/places/AKR5kUjXxfdeMfF2ruSfzcRicvWPZ66rOxRyV0pyrviII9QR09kiiQfYGsX2-he544eggPMJjT7v7QUbpeafaKv8ttOLfg38u2zmBFs=s1600-w400'
+        ),
         body=BoxComponent(
             layout='vertical',
             contents=[
