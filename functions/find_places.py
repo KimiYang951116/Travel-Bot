@@ -97,12 +97,13 @@ def find_place_details(placeId, api_key=GOOGLE_MAPS_API_KEY):
         phone = response['result'].get('formatted_phone_number', '無法取得電話')
         lat = response['result']['geometry']['location']['lat']
         long = response['result']['geometry']['location']['lng']
+        photo = response['result']['photos'][0]['photo_reference']
         if phone != '無法取得電話':
             phone = phone.replace(' ', '')
         rate = response['result'].get('rating', '無法取得評分')
         price = response['result'].get('price_level', '無法取得價錢')
         latlong = f'{lat},{long}'
-        result = [openhr, address, phone, rate, price, latlong]
+        result = [openhr, address, phone, rate, price, latlong, photo]
         return result
     except Exception:
         return 'ERROR'

@@ -102,7 +102,7 @@ def make_quick_reply_item_lst(label_lst, text_lst):
 
 
 def make_bubble_component(place_name, detail_lst, now_latlong):
-    openhr, address, phone, rate, price, latlong = detail_lst[0], detail_lst[1], detail_lst[2], detail_lst[3], detail_lst[4], detail_lst[5]  # noqa: E501
+    openhr, address, phone, rate, price, latlong, photo = detail_lst[0], detail_lst[1], detail_lst[2], detail_lst[3], detail_lst[4], detail_lst[5], detail_lst[6]  # noqa: E501
     link = generate_guild_link(now_latlong, latlong)
     bubble = BubbleContainer(
         direction='ltr',
@@ -117,7 +117,7 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
             ]
         ),
         hero=ImageComponent(
-            url='https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=Aap_uEA7vb0DDYVJWEaX3O-AtYp77AaswQKSGtDaimt3gt7QCNpdjp1BkdM6acJ96xTec3tsV_ZJNL_JP-lqsVxydG3nh739RE_hepOOL05tfJh2_ranjMadb3VoBYFvF0ma6S24qZ6QJUuV6sSRrhCskSBP5C1myCzsebztMfGvm7ij3gZT&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE'
+            url=f'https://maps.googleapis.com/maps/api/place/photo?photo_reference={photo}&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE'
         ),
         body=BoxComponent(
             layout='vertical',
