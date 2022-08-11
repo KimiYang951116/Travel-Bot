@@ -118,7 +118,8 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
             ]
         ),
         hero=ImageComponent(
-            url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE'
+            url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE',
+            size = 'full'
         ),
         body=BoxComponent(
             layout='vertical',
