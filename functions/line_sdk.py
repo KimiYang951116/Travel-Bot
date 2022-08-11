@@ -146,7 +146,7 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
                     ]
                 ),
                 BoxComponent(
-                    layout='baseline',
+                    layout='vertical',
                     contents=address_content
                 ),
                 BoxComponent(
