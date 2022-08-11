@@ -145,7 +145,7 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
                             size='lg'
                         ),
                         TextComponent(
-                            text=f'  {address}',
+                            text=f'  {address[:10]}\n{address[10:]}',
                             size='md'
                         )
                     ]
