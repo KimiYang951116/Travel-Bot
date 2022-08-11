@@ -105,6 +105,14 @@ def make_quick_reply_item_lst(label_lst, text_lst):
 def make_bubble_component(place_name, detail_lst, now_latlong):
     openhr, address, phone, rate, price, latlong, photo = detail_lst[0], detail_lst[1], detail_lst[2], detail_lst[3], detail_lst[4], detail_lst[5], detail_lst[6]  # noqa: E501
     link = generate_guild_link(now_latlong, latlong)
+    address_content = []
+    address_content.append(IconComponent(url='https://cdn-icons-png.flaticon.com/512/235/235861.png',size='lg'))
+    times = address // 15 + 1
+    for i in range(1, times+1):
+        if i != times:
+            address_content.append(TextComponent(text=f' {address[15*(times-1):15*times]}',size='md'))
+        else:
+            address_content.append(TextComponent(text=f' {address[15*(times-1):]}',size='md'))
     bubble = BubbleContainer(
         direction='ltr',
         header=BoxComponent(
@@ -139,16 +147,7 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
                 ),
                 BoxComponent(
                     layout='baseline',
-                    contents=[
-                        IconComponent(
-                            url='https://cdn-icons-png.flaticon.com/512/235/235861.png',    # noqa: E501
-                            size='lg'
-                        ),
-                        TextComponent(
-                            text=f'  {address[:10]}\n{address[10:]}',
-                            size='md'
-                        )
-                    ]
+                    contents=[address_content]
                 ),
                 BoxComponent(
                     layout='baseline',
