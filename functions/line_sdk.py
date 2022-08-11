@@ -107,7 +107,7 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
     link = generate_guild_link(now_latlong, latlong)
     address_content = []
     address_content.append(IconComponent(url='https://cdn-icons-png.flaticon.com/512/235/235861.png',size='lg'))
-    times = address // 15 + 1
+    times = len(address) // 15 + 1
     for i in range(1, times+1):
         if i != times:
             address_content.append(TextComponent(text=f' {address[15*(times-1):15*times]}',size='md'))
