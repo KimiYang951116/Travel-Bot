@@ -133,6 +133,10 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
             layout='vertical',
             contents=[
                 BoxComponent(
+                    layout='vertical',
+                    contents=address_content
+                ),
+                BoxComponent(
                     layout='baseline',
                     contents=[
                         IconComponent(
@@ -144,10 +148,6 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
                             size='lg'
                         )
                     ]
-                ),
-                BoxComponent(
-                    layout='baseline',
-                    contents=address_content
                 ),
                 BoxComponent(
                     layout='baseline',
