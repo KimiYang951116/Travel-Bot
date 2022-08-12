@@ -121,7 +121,8 @@ def handle_text_message(event):
                 multimessage.append(FlexSendMessage(alt_text='OK，你現在可以開始使用Travel Bot 的所有功能', contents=bubble))  # noqa: E501
                 line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
             else:
-                multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))  # noqa: E501
+                bubble = make_general_bubble_component('很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務')
+                multimessage.append(FlexSendMessage(alt_text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務', contents=bubble))  # noqa: E501
         else:
             multimessage.append(TextSendMessage(text='你已經完成基本設定了'))
             line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
