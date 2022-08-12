@@ -40,7 +40,7 @@ def find_nearby_places(catagory, latlong, rankby='distance', api_key=GOOGLE_MAPS
     if rankby == 'distance':
         url = f'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latlong}&key={api_key}&opennow&language=zh-TW&type={catagory}&rankby=distance'  # noqa: E501
     else:
-        url = f'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latlong}&key={api_key}&opennow&language=zh-TW&type={catagory}&radius=15000'  # noqa: E501
+        url = f'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latlong}&key={api_key}&opennow&language=zh-TW&type={catagory}&radius=5000'  # noqa: E501
     response = requests.request("GET", url).json()
     if response['status'] == 'OK':
         names = []

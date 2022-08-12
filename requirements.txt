@@ -5,3 +5,4 @@ translate
 requests
 pymysql
 pandas
+redis

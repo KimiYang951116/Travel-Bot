@@ -2,6 +2,8 @@
 from flask import Flask, request, abort
 import pandas as pd
 import pymysql
+import redis
+import os
 
 # Line bot module
 from linebot import LineBotApi, WebhookHandler
@@ -41,6 +43,7 @@ from config import (
 line_bot_api = LineBotApi(LINE_API_KEY)
 handler = WebhookHandler(WEBHOOK_HANDLER)
 app = Flask(__name__)
+r = redis.from_url(os.environ.get("REDIS_URL"))
 
 
 @app.route("/callback", methods=['POST'])
@@ -56,6 +59,12 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
+    user_id = event.source.user_id
+    if r.get(user_id) is None:
+        r.set(user_id, 1, ex=3)
+    else:
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='請不要連續點擊'))
+        return
     connection = pymysql.connect(
         host="us-cdbr-east-05.cleardb.net",
         user="b5f2e205874506",
@@ -65,7 +74,6 @@ def handle_text_message(event):
         cursorclass=pymysql.cursors.DictCursor
     )
     etext = event.message.text
-    user_id = event.source.user_id
     try:
         user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
     except Exception:
@@ -131,6 +139,11 @@ def handle_location_message(event):
         cursorclass=pymysql.cursors.DictCursor
     )
     user_id = event.source.user_id
+    if r.get(user_id) is None:
+        r.set(user_id, 1, ex=3)
+    else:
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='請不要連續點擊'))
+        return
     is_exist = CheckUserExistance(connection, user_id)
     try:
         user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
@@ -168,9 +181,14 @@ def handle_postback_message(event):
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
     )
+    user_id = event.source.user_id
+    if r.get(user_id) is None:
+        r.set(user_id, 1, ex=3)
+    else:
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='請不要連續點擊'))
+        return
     edata = event.postback.data
     multimessage = []
-    user_id = event.source.user_id
     is_exist = CheckUserExistance(connection, user_id)
     try:
         user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
