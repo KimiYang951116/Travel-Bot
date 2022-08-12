@@ -80,7 +80,7 @@ def make_nearby_carousel_template_column(nearby_place_df, s_latlong):
             print(f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={nearby_place_df[i][3]}&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE')
             column.append(CarouselColumn(
                 # thumbnail_image_url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={nearby_place_df[i][3]}&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE',
-                thumbnail_image_url='https://static8.depositphotos.com/1431107/912/i/950/depositphotos_9125966-stock-photo-premium-quality.jpg'
+                thumbnail_image_url='https://static8.depositphotos.com/1431107/912/i/950/depositphotos_9125966-stock-photo-premium-quality.jpg',
                 title=title,
                 text=text+f'\n{distance}公里(直線距離)',
                 actions=[
