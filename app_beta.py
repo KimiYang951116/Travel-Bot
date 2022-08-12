@@ -186,7 +186,8 @@ def handle_postback_message(event):
     if r.get(user_id) is None:
         r.set(user_id, 1, ex=3)
     else:
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='請不要連續點擊'))
+        bubble = make_general_bubble_component('請不要連續點擊')
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage(alt_text='請不要連續點擊', contents=bubble))
         return
     edata = event.postback.data
     multimessage = []
