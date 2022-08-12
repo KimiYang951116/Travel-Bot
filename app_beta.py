@@ -27,7 +27,8 @@ from linebot.models import *  # noqa: F401, F403
 from functions.sql import AddUserInfo, CheckUserExistance, GetUserInfo, UpdateUserInfo  # noqa: E501
 from functions.find_places import find_nearby_places, find_place_details
 from functions.line_sdk import (
-    make_bubble_component,
+    make_general_bubble_component,
+    make_place_bubble_component,
     make_nearby_carousel_template,
     make_nearby_carousel_template_column,
 )
@@ -196,7 +197,8 @@ def handle_postback_message(event):
         line_bot_api.link_rich_menu_to_user(default_richmenu_id)
         user_rich = default_richmenu_id
     if not is_exist:
-        multimessage.append(TextSendMessage(text='請先完成基本設定'))
+        bubble = make_general_bubble_component('請先完成基本設定')
+        multimessage.append(FlexSendMessage(alt_text='請先完成基本設定', contents=bubble))
         if user_rich != default_richmenu_id:
             line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)
     else:
@@ -223,7 +225,7 @@ def handle_postback_message(event):
                     placeID = information.split('(')[0]
                     place_name = information.split('(')[1].split(')')[0]
                     detail = find_place_details(placeID)
-                    bubble = make_bubble_component(place_name, detail, latlong)
+                    bubble = make_place_bubble_component(place_name, detail, latlong)
                     multimessage.append(FlexSendMessage(alt_text='彈性配置', contents=bubble))  # noqa: E501
                 elif edata == '/see_location':
                     latitude = latlong.split(',')[0]

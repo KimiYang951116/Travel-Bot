@@ -105,7 +105,7 @@ def make_quick_reply_item_lst(label_lst, text_lst):
         return 'ERROR_OCCURED'
 
 
-def make_bubble_component(place_name, detail_lst, now_latlong):
+def make_place_bubble_component(place_name, detail_lst, now_latlong):
     openhr, address, phone, rate, price, latlong, photo = detail_lst[0], detail_lst[1], detail_lst[2], detail_lst[3], detail_lst[4], detail_lst[5], detail_lst[6]  # noqa: E501
     link = generate_guild_link(now_latlong, latlong)
     address_content = []
@@ -206,5 +206,21 @@ def make_bubble_component(place_name, detail_lst, now_latlong):
                 )
             ]
         ),
+    )
+    return bubble
+
+
+def make_general_bubble_component(text):
+    bubble = BubbleContainer(
+        direction='ltr',
+        body=BoxComponent(
+            layout='vertical',
+            contents=[
+                TextComponent(
+                    text=text,
+                    size='md'
+                )
+            ]
+        )
     )
     return bubble
