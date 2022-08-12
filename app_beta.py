@@ -106,7 +106,8 @@ def handle_text_message(event):
                 )
             ))
         else:
-            multimessage.append(TextSendMessage(text='你已經完成基本設定了'))
+            bubble = make_general_bubble_component('你已經完成基本設定了')
+            multimessage.append(FlexSendMessage(alt_text='你已經完成基本設定了', contents=bubble))
             if user_rich != no_location_richmenu_id and user_rich != choose_catagory_richmenu_id:  # noqa: E501
                 line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
     elif etext.startswith('/service'):
@@ -116,7 +117,8 @@ def handle_text_message(event):
             proetext = proetext[2]
             if proetext == '1':
                 UpdateUserInfo(connection, user_id, 'service', 1)
-                multimessage.append(TextSendMessage(text='OK，你現在可以開始使用Travel Bot 的所有功能'))  # noqa: E501
+                bubble = make_general_bubble_component('OK，你現在可以開始使用Travel Bot 的所有功能')
+                multimessage.append(FlexSendMessage(alt_text='OK，你現在可以開始使用Travel Bot 的所有功能', contents=bubble))  # noqa: E501
                 line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
             else:
                 multimessage.append(TextSendMessage(text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務'))  # noqa: E501
@@ -155,13 +157,15 @@ def handle_location_message(event):
     if not is_exist:
         if user_rich != default_richmenu_id:
             line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)
-        multimessage.append(TextSendMessage(text='請先完成基本設定'))
+        bubble = make_general_bubble_component('請先完成基本設定')
+        multimessage.append(FlexSendMessage(alt_text='請先完成基本設定', contents=bubble))
     else:
         is_agree = GetUserInfo(connection, user_id, 'service')
         if is_agree == 0:
             if user_rich != default_richmenu_id:
                 line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)  # noqa: E501
-            multimessage.append(TextSendMessage(text='請先完成基本設定'))
+            bubble = make_general_bubble_component('請先完成基本設定')
+            multimessage.append(FlexSendMessage(alt_text='請先完成基本設定', contents=bubble))
         else:
             latitude = event.message.latitude
             longitude = event.message.longitude
@@ -207,7 +211,8 @@ def handle_postback_message(event):
         if is_agree == 0:
             if user_rich != default_richmenu_id:
                 line_bot_api.link_rich_menu_to_user(user_id, default_richmenu_id)  # noqa: E501
-            multimessage.append(TextSendMessage(text='請先完成基本設定'))
+            bubble = make_general_bubble_component('請先完成基本設定')
+            multimessage.append(FlexSendMessage(alt_text='請先完成基本設定', contents=bubble))
         else:
             latlong = GetUserInfo(connection, user_id, 'latlong')
             if latlong != 'None':
@@ -235,7 +240,8 @@ def handle_postback_message(event):
                 elif edata == '/rechoose_location':
                     line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
             else:
-                multimessage.append(TextSendMessage(text='你尚未提供你的位置'))
+                bubble = make_general_bubble_component('你尚未提供你的位置')
+                multimessage.append(FlexSendMessage(alt_text='你尚未提供你的位置', contents=bubble))
                 if user_rich != no_location_richmenu_id:
                     line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
     if len(multimessage) > 0 and len(multimessage) < 6:
