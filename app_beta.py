@@ -218,6 +218,7 @@ def handle_postback_message(event):
             latlong = GetUserInfo(connection, user_id, 'latlong')
             if latlong != 'None':
                 if edata.startswith('/find'):
+                    print('yes')
                     proetext = edata.split('/')
                     proetext = proetext[2]
                     nearby_places = find_nearby_places(catagory=proetext, rankby=RANKBY_DICT[proetext], latlong=latlong)  # noqa: E501
