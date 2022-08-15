@@ -222,6 +222,7 @@ def handle_postback_message(event):
                     proetext = edata.split('/')
                     proetext = proetext[2]
                     nearby_places = find_nearby_places(catagory=proetext, rankby=RANKBY_DICT[proetext], latlong=latlong)  # noqa: E501
+                    print(nearby_places)
                     if type(nearby_places) == pd.core.frame.DataFrame:
                         columns = make_nearby_carousel_template_column(nearby_places, latlong)  # noqa: E501
                         if columns != 'ERROR_OCCURED':
