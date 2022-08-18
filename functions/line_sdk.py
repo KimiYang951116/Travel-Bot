@@ -108,7 +108,7 @@ def make_quick_reply_item_lst(label_lst, text_lst):
 def make_place_bubble_component(place_name, detail_lst, now_latlong):
     openhr, address, phone, rate, price, latlong, photo = detail_lst[0], detail_lst[1], detail_lst[2], detail_lst[3], detail_lst[4], detail_lst[5], detail_lst[6]  # noqa: E501
     link = generate_guild_link(now_latlong, latlong)
-    print(f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE')
+    print(f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyCukChIAOJzLcmThb4avOpaWJcPPNQ8QH4')
     address_content = []
     # address_content.append(IconComponent(url='https://cdn-icons-png.flaticon.com/512/235/235861.png',size='lg'))
     times = len(address) // 15 + 1
@@ -130,7 +130,7 @@ def make_place_bubble_component(place_name, detail_lst, now_latlong):
             ]
         ),
         hero=ImageComponent(
-            url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE',  # noqa: E501
+            url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyCukChIAOJzLcmThb4avOpaWJcPPNQ8QH4',  # noqa: E501
             size='full'
         ),
         body=BoxComponent(
