@@ -77,7 +77,7 @@ def make_nearby_carousel_template_column(nearby_place_df, s_latlong):
                 text = text[:60]
             print(f'{title}\n{text}')
             distance = calculate_distance(s_latlong, nearby_place_df[i][4])
-            print(f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={nearby_place_df[i][3]}&key=AIzaSyDIX1tgCL2g8bS9o9rT50G8GyPvY1cBNFE')  # noqa: E501
+            print(f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={nearby_place_df[i][3]}&key=AIzaSyBrGlrCAciUlpe_04Nz3wA3_og0cxUFkHA')  # noqa: E501
             column.append(CarouselColumn(
                 thumbnail_image_url='https://static8.depositphotos.com/1431107/912/i/950/depositphotos_9125966-stock-photo-premium-quality.jpg',  # noqa: E501
                 title=title,
@@ -107,7 +107,7 @@ def make_quick_reply_item_lst(label_lst, text_lst):
 def make_place_bubble_component(place_name, detail_lst, now_latlong):
     openhr, address, phone, rate, price, latlong, photo = detail_lst[0], detail_lst[1], detail_lst[2], detail_lst[3], detail_lst[4], detail_lst[5], detail_lst[6]  # noqa: E501
     link = generate_guild_link(now_latlong, latlong)
-    print(f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyCukChIAOJzLcmThb4avOpaWJcPPNQ8QH4')
+    print(f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyBrGlrCAciUlpe_04Nz3wA3_og0cxUFkHA')
     address_content = []
     # address_content.append(IconComponent(url='https://cdn-icons-png.flaticon.com/512/235/235861.png',size='lg'))
     times = len(address) // 15 + 1
@@ -129,7 +129,7 @@ def make_place_bubble_component(place_name, detail_lst, now_latlong):
             ]
         ),
         hero=ImageComponent(
-            url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyCukChIAOJzLcmThb4avOpaWJcPPNQ8QH4',  # noqa: E501
+            url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyBrGlrCAciUlpe_04Nz3wA3_og0cxUFkHA',  # noqa: E501
             size='full'
         ),
         body=BoxComponent(

@@ -1,6 +1,6 @@
 LINE_API_KEY = '/NWkZeGHgzhXfj6UzLDYIf+xv5n3DHk4zB+YrNB2iIZafn55A44Eqfk3qOZClkK2webGFYYLpf5pQWGXzD0BKAJfJsJm8zDWyNSMnQ6pcgGwtF4j4hHelBnU5kgZUhP0TTiCXJ9fewaSpB+U4RIWawdB04t89/1O/w1cDnyilFU='  # noqa: E501
 WEBHOOK_HANDLER = 'f28db6c57607c6e4a1b570b8294675cb'
-GOOGLE_MAPS_API_KEY = 'AIzaSyCukChIAOJzLcmThb4avOpaWJcPPNQ8QH4'
+GOOGLE_MAPS_API_KEY = 'AIzaSyBrGlrCAciUlpe_04Nz3wA3_og0cxUFkHA'
 RANKBY_DICT = {
     'restaurant': 'prominence',
     'gas_station': 'distance',
