@@ -79,7 +79,7 @@ def make_nearby_carousel_template_column(nearby_place_df, s_latlong):
             distance = calculate_distance(s_latlong, nearby_place_df[i][4])
             print(f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={nearby_place_df[i][3]}&key=AIzaSyBrGlrCAciUlpe_04Nz3wA3_og0cxUFkHA')  # noqa: E501
             column.append(CarouselColumn(
-                thumbnail_image_url='https://static8.depositphotos.com/1431107/912/i/950/depositphotos_9125966-stock-photo-premium-quality.jpg',  # noqa: E501
+                thumbnail_image_url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={nearby_place_df[i][3]}&key=AIzaSyBrGlrCAciUlpe_04Nz3wA3_og0cxUFkHA',  # noqa: E501
                 title=title,
                 text=text+f'\n{distance}公里(直線距離)',
                 actions=[
