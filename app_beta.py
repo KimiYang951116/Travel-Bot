@@ -38,7 +38,9 @@ from config import (
     WEBHOOK_HANDLER,
     no_location_richmenu_id,
     default_richmenu_id,
-    choose_catagory_richmenu_id
+    choose_catagory_richmenu_id,
+    is_agreeTrue,
+    is_agreeFalse
 )
 
 line_bot_api = LineBotApi(LINE_API_KEY)
@@ -117,12 +119,12 @@ def handle_text_message(event):
             proetext = proetext[2]
             if proetext == '1':
                 UpdateUserInfo(connection, user_id, 'service', 1)
-                bubble = make_general_bubble_component('OK，你現在可以開始使用Travel Bot 的所有功能')
-                multimessage.append(FlexSendMessage(alt_text='OK，你現在可以開始使用Travel Bot 的所有功能', contents=bubble))  # noqa: E501
+                bubble = make_general_bubble_component(is_agreeTrue)
+                multimessage.append(FlexSendMessage(alt_text=is_agreeTrue, contents=bubble))  # noqa: E501
                 line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501
             else:
-                bubble = make_general_bubble_component('很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務')
-                multimessage.append(FlexSendMessage(alt_text='很抱歉，由於你不同意我們的同意事項，我們無法為你提供服務，同意我們的同意事項以獲得服務', contents=bubble))  # noqa: E501
+                bubble = make_general_bubble_component(is_agreeFalse)
+                multimessage.append(FlexSendMessage(alt_text=is_agreeFalse, contents=bubble))  # noqa: E501
         else:
             multimessage.append(TextSendMessage(text='你已經完成基本設定了'))
             line_bot_api.link_rich_menu_to_user(user_id, no_location_richmenu_id)  # noqa: E501

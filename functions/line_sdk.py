@@ -17,6 +17,7 @@ from linebot.models import (
 )
 
 from functions.find_places import calculate_distance, generate_guild_link
+from config import GOOGLE_MAPS_API_KEY
 
 
 def make_nearby_carousel_template(catagory, column):
@@ -77,9 +78,8 @@ def make_nearby_carousel_template_column(nearby_place_df, s_latlong):
                 text = text[:60]
             print(f'{title}\n{text}')
             distance = calculate_distance(s_latlong, nearby_place_df[i][4])
-            print(f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={nearby_place_df[i][3]}&key=AIzaSyBrGlrCAciUlpe_04Nz3wA3_og0cxUFkHA')  # noqa: E501
             column.append(CarouselColumn(
-                thumbnail_image_url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={nearby_place_df[i][3]}&key=AIzaSyBrGlrCAciUlpe_04Nz3wA3_og0cxUFkHA',  # noqa: E501
+                thumbnail_image_url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={nearby_place_df[i][3]}&key={GOOGLE_MAPS_API_KEY}',  # noqa: E501
                 title=title,
                 text=text+f'\n{distance}公里(直線距離)',
                 actions=[
@@ -107,9 +107,8 @@ def make_quick_reply_item_lst(label_lst, text_lst):
 def make_place_bubble_component(place_name, detail_lst, now_latlong):
     openhr, address, phone, rate, price, latlong, photo = detail_lst[0], detail_lst[1], detail_lst[2], detail_lst[3], detail_lst[4], detail_lst[5], detail_lst[6]  # noqa: E501
     link = generate_guild_link(now_latlong, latlong)
-    print(f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyBrGlrCAciUlpe_04Nz3wA3_og0cxUFkHA')
+    print(f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key={GOOGLE_MAPS_API_KEY}')  # noqa : E501
     address_content = []
-    # address_content.append(IconComponent(url='https://cdn-icons-png.flaticon.com/512/235/235861.png',size='lg'))
     times = len(address) // 15 + 1
     for i in range(1, times+1):
         if i != times:
@@ -129,7 +128,7 @@ def make_place_bubble_component(place_name, detail_lst, now_latlong):
             ]
         ),
         hero=ImageComponent(
-            url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key=AIzaSyBrGlrCAciUlpe_04Nz3wA3_og0cxUFkHA',  # noqa: E501
+            url=f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo}&key={GOOGLE_MAPS_API_KEY}',  # noqa: E501
             size='full'
         ),
         body=BoxComponent(
