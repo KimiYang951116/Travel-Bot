@@ -43,6 +43,7 @@ from config import (
     is_agreeFalse
 )
 
+
 line_bot_api = LineBotApi(LINE_API_KEY)
 handler = WebhookHandler(WEBHOOK_HANDLER)
 app = Flask(__name__)
