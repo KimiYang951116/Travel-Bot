@@ -47,7 +47,6 @@ from config import (
 line_bot_api = LineBotApi(LINE_API_KEY)
 handler = WebhookHandler(WEBHOOK_HANDLER)
 app = Flask(__name__)
-r = redis.from_url(os.environ.get("REDIS_URL"))
 
 
 @app.route("/callback", methods=['POST'])
@@ -64,11 +63,6 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     user_id = event.source.user_id
-    if r.get(user_id) is None:
-        r.set(user_id, 1, ex=3)
-    else:
-        bubble = make_general_bubble_component('請不要連續點擊')
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage(alt_text='請不要連續點擊', contents=bubble))
     connection = pymysql.connect(
         host="us-cdbr-east-05.cleardb.net",
         user="b5f2e205874506",
@@ -146,11 +140,6 @@ def handle_location_message(event):
         cursorclass=pymysql.cursors.DictCursor
     )
     user_id = event.source.user_id
-    if r.get(user_id) is None:
-        r.set(user_id, 1, ex=3)
-    else:
-        bubble = make_general_bubble_component('請不要連續點擊')
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage(alt_text='請不要連續點擊', contents=bubble))
     is_exist = CheckUserExistance(connection, user_id)
     try:
         user_rich = line_bot_api.get_rich_menu_id_of_user(user_id)
