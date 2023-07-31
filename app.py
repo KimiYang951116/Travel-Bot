@@ -2,8 +2,6 @@
 from flask import Flask, request, abort
 import pandas as pd
 import pymysql
-import redis
-import os
 
 # Line bot module
 from linebot import LineBotApi, WebhookHandler
